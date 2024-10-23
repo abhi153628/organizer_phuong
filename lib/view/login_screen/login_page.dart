@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:testing/modal/transition_modal.dart';
 import 'package:testing/view/firebase_auth_services.dart';
-import 'package:testing/view/home_page/homepage.dart';
-import 'package:testing/view/profile_screen/profile_view_screen.dart';
+
 
 
 
@@ -131,7 +129,7 @@ class RightPanel extends StatefulWidget {
 }
 
 class _RightPanelState extends State<RightPanel> {
-  final _auth= FirebaseAuthServices();
+  final _auth= FirebaseAuthServices(); 
   
   final _formKey = GlobalKey<FormState>();
   String _email = '';
@@ -146,7 +144,7 @@ class _RightPanelState extends State<RightPanel> {
          
        //  sending the credentials to your backend
      final user = await _auth.loginUserWithEmailAndPassword(emailController.text,passwordController.text);
-          Navigator.of(context).push(GentlePageTransition(page: ProfilePage()));
+          // Navigator.of(context).push(GentlePageTransition(page: ProfilePage()));
      if(user != null){
       print('Email: $_email, Password: $_password');
 

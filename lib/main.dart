@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:testing/firebase_options.dart';
-import 'package:testing/view/dash_board.dart';
+import 'package:testing/view/dashboard_screen/dash_board.dart';
 import 'package:testing/view/home_page/homepage.dart';
 
 import 'package:testing/view/login_screen/login_page.dart';
@@ -39,4 +39,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 

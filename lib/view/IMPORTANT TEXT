@@ -1,0 +1,19 @@
+const Color(0xFFFF5E1D),
+  onStatusUpdate(bandData['organizerId'], 'rejected'),
+  onPressed: () => onStatusUpdate(bandData['organizerId'], 'approved'),
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.transparent,
+        contentPadding: EdgeInsets.zero,
+        content: ProfilePage(
+          organizerId: bandData['organizerId'],
+          width: MediaQuery.of(context).size.width,
+          key: ValueKey(
+              'profile_page_${bandData['organizerId']}'),
+        ),
+      );
+    },
+  );
