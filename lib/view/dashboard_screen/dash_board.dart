@@ -1,10 +1,38 @@
-// lib/screens/admin/dashboard/phuong_admin_dashboard.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:testing/view/dashboard_screen/widgets/dashboard_content.dart';
-import 'package:testing/view/dashboard_screen/widgets/dashboard_content_widget.dart';
-import 'package:testing/view/dashboard_screen/widgets/dashboard_sidebar.dart';
+import 'package:testing/view/dashboard_screen/widgets/sidebar.dart';
 
+
+class ScalableWrapper extends StatelessWidget {
+  final Widget child;
+  final double designWidth;
+
+  const ScalableWrapper({
+    Key? key,
+    required this.child,
+    this.designWidth = 0.7,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double currentWidth = constraints.maxWidth;
+        double originalDesignWidth = MediaQuery.of(context).size.width * designWidth;
+        double scaleFactor = currentWidth / originalDesignWidth;
+
+        return Transform.scale(
+          scale: scaleFactor,
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: originalDesignWidth,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+}
 
 class PhuongAdminDashboard extends StatefulWidget {
   const PhuongAdminDashboard({Key? key}) : super(key: key);
@@ -15,9 +43,11 @@ class PhuongAdminDashboard extends StatefulWidget {
 
 class _PhuongAdminDashboardState extends State<PhuongAdminDashboard> {
   int _selectedIndex = 0;
-  List<Map<String,dynamic>> acceptedBands =[];
-  List<Map<String,dynamic>> rejecctedBands =[];
- 
+  List<Map<String, dynamic>> acceptedBands = [];
+  List<Map<String, dynamic>> rejectedBands = [];
+  int totalBands = 0;
+  int pendingApprovals = 0;
+
   void updateSelectedIndex(int index) {
     setState(() {
       _selectedIndex = index;
@@ -36,29 +66,38 @@ class _PhuongAdminDashboardState extends State<PhuongAdminDashboard> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
-      body: Row(
-        children: [
-          if (screenWidth > 800)
-            AdminSidebar(
-              selectedIndex: _selectedIndex,
-              onIndexChanged: updateSelectedIndex,
-            ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(screenWidth > 600 ? 32.0 : 16.0),
-                child: DashboardContent(selectedIndex: _selectedIndex),
+
+    Widget dashboardContent = Row(
+      children: [
+      
+          AdminSidebar(
+            selectedIndex: _selectedIndex,
+            onIndexChanged: updateSelectedIndex,
+          ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(screenWidth > 500 ? 32.0 : 16.0),
+              child: DashboardContent(
+                selectedIndex: _selectedIndex,
+                totalBands: totalBands,
+                pendingApprovals: pendingApprovals,
+                rejectedBands: rejectedBands.length,
+                rejectedEvents: rejectedBands.length,
               ),
             ),
           ),
-        ],
+        ),
+      ],
+    );
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A1A1A),
+  
+      body: ScalableWrapper(
+        designWidth: 1, 
+        child: dashboardContent,
       ),
     );
   }
 }
-
-
-
-

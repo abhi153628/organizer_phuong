@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:testing/modal/model.dart';
-
+import 'package:testing/res/image_string.dart';
+//! HORIZONTALY SCROLLING IMAGES
 class ImmersiveScrollingImages extends StatefulWidget {
   final int startingIndex;
   final int direction;

@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:testing/view/dashboard_screen/widgets/dashboard_band_card_widget.dart';
+import 'package:testing/view/dashboard_screen/widgets/band_card_widget.dart';
 
 class RejectedBandsPage extends StatefulWidget {
   const RejectedBandsPage({Key? key}) : super(key: key);

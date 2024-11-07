@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:testing/res/image_string.dart';
 
-import 'package:testing/modal/model.dart';
-
-
+//! AUTO SCROLLING IMAGE WIDGET IN THE RIGHT SIDE
 class ScrollingImages extends StatefulWidget {
   final int startingIndex;
+
   const ScrollingImages({
     super.key,
     required this.startingIndex,
@@ -15,7 +15,8 @@ class ScrollingImages extends StatefulWidget {
   State<ScrollingImages> createState() => _ScrollingImagesState();
 }
 
-class _ScrollingImagesState extends State<ScrollingImages> with SingleTickerProviderStateMixin {
+class _ScrollingImagesState extends State<ScrollingImages>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -48,38 +49,88 @@ class _ScrollingImagesState extends State<ScrollingImages> with SingleTickerProv
     final h = MediaQuery.of(context).size.height;
     final w = MediaQuery.of(context).size.width;
 
-    return Transform.rotate(
-      angle: 8.00 * pi,
-      child: SizedBox(
-        height: h * 0.9,
-        width: w * 0.19,
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Stack(
-              children: List.generate(5, (index) {
-                final imageIndex = (index + widget.startingIndex) % modelsImages.length;
-                return Positioned(
-                  top: _calculatePosition(index, h * 0.6),
-                  left: 2,
-                  right: 5,
-                  height: h * 0.6,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(22)),
-                      image: DecorationImage(
-                        image: AssetImage(modelsImages[imageIndex]),
-                        fit: BoxFit.cover,
+    return Stack(
+      children: [
+        Transform.rotate(
+          angle: 8.00 * pi,
+          child: SizedBox(
+            height: h * 0.999, //changing the total height of the moving images
+            width: w * 0.19,
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Stack(
+                  children: List.generate(5, (index) {
+                    final imageIndex =
+                        (index + widget.startingIndex) % modelsImages.length;
+                    return Positioned(
+                      top: _calculatePosition(index, h * 0.6),
+                      left: 2,
+                      right: 5,
+                      height: h * 0.6,
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(22)),
+                              image: DecorationImage(
+                                image: AssetImage(modelsImages[imageIndex]),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 );
-              }),
-            );
-          },
+              },
+            ),
+          ),
         ),
-      ),
+        // Vignette effect on top
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          height: h * 0.1,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.3),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Vignette effect on bottom
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: h * 0.1,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.7),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

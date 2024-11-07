@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+//! CAROUSEL USED IN THE HOMEPAGE
 class AnimatedEventCarousel extends StatefulWidget {
   const AnimatedEventCarousel({Key? key}) : super(key: key);
 

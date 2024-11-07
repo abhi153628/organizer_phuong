@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:testing/modal/firebase_service.dart';
-import 'package:testing/view/home_page/wiidgets/cstm_alertbox.dart';
+import 'package:testing/utils/cstm_alertbox.dart';
 
 // Import the Firebase service
 
@@ -57,15 +57,15 @@ class _ProfilePageState extends State<ProfilePage>
     _fetchProfileData();
   }
 
- void _handleStatusUpdate(String status) {
+  void _handleStatusUpdate(String status) {
     if (widget.onStatusUpdate != null) {
       widget.onStatusUpdate!(widget.organizerId, status);
-      
+
       // First pop the alert dialog if it exists
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       // Then pop the profile page dialog
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
@@ -212,9 +212,11 @@ class _ProfilePageState extends State<ProfilePage>
                                                   backgroundImage: const AssetImage(
                                                       'asset/back-view-crowd-fans-watching-live-concert-performance-6.jpg'),
                                                   child: _profileData[
-                                                              'imageUrl'] !=
-                                                          null||_profileData[
-                                                              'imageUrl'] !=''
+                                                                  'imageUrl'] !=
+                                                              null ||
+                                                          _profileData[
+                                                                  'imageUrl'] !=
+                                                              ''
                                                       ? ClipOval(
                                                           child:
                                                               CachedNetworkImage(
@@ -225,9 +227,17 @@ class _ProfilePageState extends State<ProfilePage>
                                                           width: avatarSize * 2,
                                                           height:
                                                               avatarSize * 2,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              const CircularProgressIndicator(),
+                                                          placeholder:
+                                                              (context, url) =>
+                                                                  SizedBox(
+                                                            width: 300,
+                                                            height: 300,
+                                                            // child: Lottie.asset(
+                                                            //   'asset/Animation - 1729398055158.json',
+                                                            //   fit: BoxFit
+                                                            //       .contain,
+                                                            // ),
+                                                          ),
                                                           errorWidget: (context,
                                                               url, error) {
                                                             print(
@@ -260,10 +270,10 @@ class _ProfilePageState extends State<ProfilePage>
                                                       child: FadeTransition(
                                                         opacity: _fadeAnimation,
                                                         child: Text(
-                                                            _profileData[
+                                                           ( _profileData[
                                                                     'name'] ??
-                                                                'Name Not Available',
-                                                            style: GoogleFonts.gabriela(
+                                                                'Name Not Available').toString().toUpperCase(),
+                                                            style: GoogleFonts.ibmPlexSansArabic(
                                                                 color: const Color
                                                                     .fromARGB(
                                                                     255,
@@ -317,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage>
                                               child: Text(
                                                 _profileData['description'] ??
                                                     'Description Not Available',
-                                                style: GoogleFonts.aBeeZee(
+                                                style: GoogleFonts.rubik(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 20),
@@ -396,29 +406,29 @@ class _ProfilePageState extends State<ProfilePage>
                                                     height: 50,
                                                     width: 200,
                                                     child: OutlinedButton(
-                                                      onPressed:  () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomAlertDialog(
-                                      title: 'Final Confirmation',
-                                      subtitle: 'Are you sure you want to accept this event organizer? This is your last chance to review their profile details before proceeding. Once confirmed, the decision is final.',
-                                      confirmButtonText: 'Yes, Accept',
-                                      cancelButtonText: 'Review Again',
-                                      onConfirm: () => _handleStatusUpdate('rejected'),
-                                      onCancel: () => Navigator.of(context).pop(),
-                                    );
-                                  },
-                                ),
-                                                      child: Text(
-                                                        'Reject',
-                                                        style:
-                                                            GoogleFonts.aBeeZee(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 20),
+                                                      onPressed: () =>
+                                                          showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return CustomAlertDialog(
+                                                            title:
+                                                                'Final Confirmation',
+                                                            subtitle:
+                                                                'Are you sure you want to accept this event organizer? This is your last chance to review their profile details before proceeding. Once confirmed, the decision is final.',
+                                                            confirmButtonText:
+                                                                'Yes, Accept',
+                                                            cancelButtonText:
+                                                                'Review Again',
+                                                            onConfirm: () =>
+                                                                _handleStatusUpdate(
+                                                                    'rejected'),
+                                                            onCancel: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                          );
+                                                        },
                                                       ),
                                                       style: OutlinedButton
                                                           .styleFrom(
@@ -434,27 +444,50 @@ class _ProfilePageState extends State<ProfilePage>
                                                                   .circular(30),
                                                         ),
                                                       ),
+                                                      child: Text(
+                                                        'Reject',
+                                                        style:
+                                                            GoogleFonts.aBeeZee(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 20),
+                                                      ),
                                                     ),
                                                   ),
                                                   SizedBox(
                                                     height: 50,
                                                     width: 200,
                                                     child: OutlinedButton.icon(
-                                                      onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomAlertDialog(
-                                      title: 'Final Confirmation',
-                                      subtitle: 'Are you sure you want to accept this event organizer? This is your last chance to review their profile details before proceeding. Once confirmed, the decision is final.',
-                                      confirmButtonText: 'Yes, Accept',
-                                      cancelButtonText: 'Review Again',
-                                      onConfirm: () => _handleStatusUpdate('approved'),
-                                      onCancel: () => Navigator.of(context).pop(),
-                                    );
-                                  },
-                                ),
+                                                      onPressed: () =>
+                                                      
+                                                          showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return CustomAlertDialog(
+                                                            title:
+                                                                'Final Confirmation',
+                                                            subtitle:
+                                                                'Are you sure you want to accept this event organizer? This is your last chance to review their profile details before proceeding. Once confirmed, the decision is final.',
+                                                            confirmButtonText:
+                                                                'Yes, Accept',
+                                                            cancelButtonText:
+                                                                'Review Again',
+                                                            onConfirm: () =>
+                                                                _handleStatusUpdate(
+                                                                    'approved'),
+                                                            onCancel: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                          );
+                                                        },
+                                                      ),
                                                       label: Text(
-                                                        'Accept',
+                                                        'Approve',
                                                         style:
                                                             GoogleFonts.aBeeZee(
                                                                 color: Colors

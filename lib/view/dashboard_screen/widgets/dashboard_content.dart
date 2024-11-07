@@ -3,16 +3,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:testing/view/dashboard_screen/accepted_screen.dart';
 import 'package:testing/view/dashboard_screen/dash_board.dart';
 import 'package:testing/view/dashboard_screen/rejected_bands.dart';
-import 'package:testing/view/dashboard_screen/widgets/dashboard_content_widget.dart';
-import 'package:testing/view/dashboard_screen/widgets/pending_bands.dart';
+import 'package:testing/view/dashboard_screen/widgets/welcoming_widget.dart';
+import 'package:testing/view/dashboard_screen/widgets/firebase_service_fetching_band.dart';
 import 'package:testing/view/dashboard_screen/widgets/stats_card.dart';
-
+//! SIDE BAR FUNCTIONS ON PRESSED
 class DashboardContent extends StatelessWidget {
   final int selectedIndex;
+  final int totalBands;
+  final int pendingApprovals;
+  final int rejectedBands;
 
   const DashboardContent({
     Key? key,
     required this.selectedIndex,
+    required this.totalBands,
+    required this.pendingApprovals,
+    required this.rejectedBands, required int rejectedEvents,
   }) : super(key: key);
 
   @override
@@ -24,9 +30,9 @@ class DashboardContent extends StatelessWidget {
           children: [
             const DashboardHeader(),
             const SizedBox(height: 40),
-            const StatCards(),
-            const SizedBox(height: 40),
-            const PendingBands(),
+          
+          
+            const FireBaseFetchingBand(),
           ],
         );
       case 1:
@@ -34,7 +40,7 @@ class DashboardContent extends StatelessWidget {
       case 2:
         return _buildRejectedContent();
       case 3:
-        return _buildPendingContent();
+        return _buildDashboardContent();
       default:
         return _buildDashboardContent();
     }
@@ -53,14 +59,13 @@ class DashboardContent extends StatelessWidget {
   }
 
   Widget _buildDashboardContent() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DashboardHeader(),
-        SizedBox(height: 40),
-        StatCards(),
-        SizedBox(height: 40),
-        PendingBands(),
+        const DashboardHeader(),
+        const SizedBox(height: 40),
+       
+        const FireBaseFetchingBand(),
       ],
     );
   }

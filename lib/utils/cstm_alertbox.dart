@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAlertDialog extends StatelessWidget {
   final String title;
@@ -36,14 +37,12 @@ class CustomAlertDialog extends StatelessWidget {
         Container(
           height: 500,
           width: 600,
-
           padding: EdgeInsets.only(
             top: 100,
             bottom: 16,
             left: 16,
             right: 16,
           ),
-          
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 0, 0, 0),
             shape: BoxShape.rectangle,
@@ -59,30 +58,38 @@ class CustomAlertDialog extends StatelessWidget {
           child: Column(
             // mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SizedBox(height: 50,),
-              //!title
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white
-                ),
+              SizedBox(
+                height: 50,
               ),
-               SizedBox(height: 30,),
-               //!subtitle
+              //!title
+              Text(title,
+                  style: GoogleFonts.ibmPlexSansArabic(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white)),
+              SizedBox(
+                height: 30,
+              ),
+              //!subtitle
               Text(
                 subtitle,
-                style: TextStyle(fontSize: 17.0,  color: Colors.grey,fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    fontSize: 17.0,
+                    color: const Color.fromARGB(255, 194, 191, 191),
+                    fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
-            SizedBox(height: 100,),
+              SizedBox(
+                height: 100,
+              ),
               Row(
                 //!buttons
-              
+
                 children: <Widget>[
-                   Spacer(),
-                  SizedBox(width: 250,height: 60,
+                  Spacer(),
+                  SizedBox(
+                    width: 250,
+                    height: 60,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
@@ -91,14 +98,17 @@ class CustomAlertDialog extends StatelessWidget {
                         ),
                       ),
                       onPressed: onCancel,
-                      child: Text(
-                        cancelButtonText,
-                        style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),
-                      ),
+                      child: Text(cancelButtonText,
+                          style: GoogleFonts.aBeeZee(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
                     ),
                   ),
-                 Spacer(),
-                  SizedBox(width: 250,height: 60,
+                  Spacer(),
+                  SizedBox(
+                    width: 250,
+                    height: 60,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF5E1D),
@@ -109,11 +119,14 @@ class CustomAlertDialog extends StatelessWidget {
                       onPressed: onConfirm,
                       child: Text(
                         confirmButtonText,
-                        style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),
+                        style: GoogleFonts.aBeeZee(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   ),
-                   Spacer(),
+                  Spacer(),
                 ],
               ),
             ],

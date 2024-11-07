@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:http/http.dart';
+//! ANIMATED GRADIENT TEXT
 class AnimatedGradientText extends StatefulWidget {
   final String text;
   final double fontSize;
@@ -59,18 +60,33 @@ class _AnimatedGradientTextState extends State<AnimatedGradientText>
               tileMode: TileMode.repeated, // Repeated flow for smooth animation
             ).createShader(bounds);
           },
-          child: Text(
-            widget.text,
-            style: GoogleFonts.montserrat(
-              fontSize: widget.fontSize,
-              color: Colors.white, // Base color of the text (if needed)
-              fontWeight: FontWeight.w700,
-              height: 1,
-              letterSpacing: -0.5,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              widget.text,
+              style: GoogleFonts.montserrat(
+                fontSize: getResponsiveFontSize(context, 3.3),
+                color: Colors.white, // Base color of the text (if needed)
+                fontWeight: FontWeight.w700,
+                height: 1,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         );
       },
     );
   }
+  double getResponsiveFontSize(BuildContext context, double scaleFactor) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  // Adjust font scaling factor based on screen width
+  if (screenWidth > 1200) {
+    return 24 * scaleFactor; // Large screens, like desktops
+  } else if (screenWidth > 800) {
+    return 20 * scaleFactor; // Medium screens, like tablets
+  } else {
+    return 16 * scaleFactor; // Small screens, like mobile
+  }
+}
+
 }
