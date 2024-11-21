@@ -1,4 +1,4 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
   final String id;
@@ -31,7 +31,9 @@ class Post {
       userId: json['userId'] as String,
       imageUrl: json['imageUrl'] as String,
       description: json['description'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null 
+          ? (json['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 }

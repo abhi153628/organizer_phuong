@@ -7,6 +7,7 @@ class CstmText extends StatelessWidget {
   final Color? color;
   final String? fontFamily;
   final FontWeight? fontWeight;
+  final TextAlign? textAlign;
 
   CstmText(
       {super.key,
@@ -14,7 +15,7 @@ class CstmText extends StatelessWidget {
       required this.fontSize,
       this.color,
       this.fontFamily,
-      this.fontWeight});
+      this.fontWeight, this.textAlign, });
 
   @override
   Widget build(BuildContext context) {

@@ -48,7 +48,7 @@ class Wrapper extends StatelessWidget {
                   {
                       final status = data?['status'] ?? 'pending';
                     if (status == 'approved') {
-                        return MainScreen(pageIndex: 0,profileId: '',);
+                        return MainScreen(organizerId: '',initialIndex: 0,);
                       }
                       return ShowingStatus(organizerId: snapshot.data!.id);
 

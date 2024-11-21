@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/core/widgets/transition.dart';
+
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
 import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
 import 'package:phuong_for_organizer/presentation/org_profile_add_screen/widgets/add_link_wid.dart';
-import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/org_prof_view_screen.dart';
+
 
 class FieldsOrgProfileWidget extends StatefulWidget {
   final Size size;
@@ -15,6 +15,7 @@ class FieldsOrgProfileWidget extends StatefulWidget {
   const FieldsOrgProfileWidget({super.key, required this.size});
 
   @override
+  // ignore: library_private_types_in_public_api
   _FieldsOrgProfileWidgetState createState() => _FieldsOrgProfileWidgetState();
 }
 
@@ -47,56 +48,62 @@ class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
   }
 
   Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate()) {
+  if (!_formKey.currentState!.validate()) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill all required fields')),
+    );
+    return;
+  }
+
+  if (_selectedImage == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please select a profile image')),
+    );
+    return;
+  }
+
+  setState(() => _isLoading = true);
+
+  try {
+    _uploadedImageUrl = await _firebaseService.uploadImage(_selectedImage!);
+
+    final profile = OrganizerProfileAddingModal(
+      name: _nameController.text,
+      bio: _bioController.text,
+      imageUrl: _uploadedImageUrl,
+      links: _links,
+    );
+
+   final profileId= await _firebaseService.saveProfile(profile);
+
+    setState(() => _isLoading = false);
+
+ if (mounted) {
+      // Navigate back to MainScreen with profile tab selected
+      Navigator.
+      of(context).
+      pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => Name()
+        ),
+        (route) => false, // This removes all previous routes
+      );
+
+      
+      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
+        const SnackBar(content: Text('Profile updated successfully')),
       );
-      return;
     }
-
-    if (_selectedImage == null) {
+  } catch (e) {
+    setState(() => _isLoading = false);
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a profile image')),
+        SnackBar(content: Text('Error saving profile: $e')),
       );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      // Upload image
-      _uploadedImageUrl = await _firebaseService.uploadImage(_selectedImage!);
-
-      // Create and save profile
-      final profile = OrganizerProfileAddingModal(
-        name: _nameController.text,
-        bio: _bioController.text,
-        imageUrl: _uploadedImageUrl,
-        links: _links,
-      );
-
-      final String profileId = await _firebaseService.saveProfile(profile);
-
-      setState(() => _isLoading = false);
-
-      // Navigate to success screen with the correct profile ID
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          GentlePageTransition(
-            page: MainScreen(pageIndex: 1,profileId: profileId,)
-          ),
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving profile: $e')),
-        );
-      }
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -244,5 +251,18 @@ class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
     _nameController.dispose();
     _bioController.dispose();
     super.dispose();
+  }
+}
+class Name extends StatefulWidget {
+  const Name({super.key});
+
+  @override
+  State<Name> createState() => _NameState();
+}
+
+class _NameState extends State<Name> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }

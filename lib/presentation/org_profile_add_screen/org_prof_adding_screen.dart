@@ -8,7 +8,7 @@ import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_b
 
 
 class AddOrganizerProfileScreen extends StatefulWidget {
-  const AddOrganizerProfileScreen({Key? key}) : super(key: key);
+  const AddOrganizerProfileScreen({super.key});
 
   @override
   State<AddOrganizerProfileScreen> createState() => _AddOrganizerProfileScreenState();

@@ -5,19 +5,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
-import 'package:phuong_for_organizer/presentation/home_page/home_screen.dart';
-import 'package:phuong_for_organizer/presentation/homepage.dart';
-import 'package:phuong_for_organizer/presentation/loginpage/login_screen.dart';
+
 
 class SuccessBottomSheet extends StatelessWidget {
   final String organizerId;
   final String organizerName;
 
   const SuccessBottomSheet({
-    Key? key,
+    super.key,
     required this.organizerId,
     required this.organizerName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +34,18 @@ class SuccessBottomSheet extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 10,
-                offset: Offset(0, -5),
+                offset: const Offset(0, -5),
               ),
             ],
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -59,9 +57,9 @@ class SuccessBottomSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Container(
-                    padding: EdgeInsets.all(1),
+                    padding: const EdgeInsets.all(1),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: green.withOpacity(0.1),
@@ -72,15 +70,15 @@ class SuccessBottomSheet extends StatelessWidget {
                       width: 100,
                     ),
                   ),
-                  SizedBox(height: 24),
-                  Text(
+                  const SizedBox(height: 24),
+                  const Text(
                     'Profile Approved!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     'Congratulations! Your profile has been approved by our admin team.',
                     textAlign: TextAlign.center,
@@ -89,9 +87,9 @@ class SuccessBottomSheet extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Container(
-                    padding: EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -121,23 +119,23 @@ class SuccessBottomSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     organizerName,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
                   Navigator.of(context)
-                  .pushAndRemoveUntil(GentlePageTransition(page: MainScreen(pageIndex: 0,profileId: '',)),(route) => false,);
+                  .pushAndRemoveUntil(GentlePageTransition(page: MainScreen(organizerId: '',)),(route) => false,);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: purple,
-                      padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -152,7 +150,7 @@ class SuccessBottomSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

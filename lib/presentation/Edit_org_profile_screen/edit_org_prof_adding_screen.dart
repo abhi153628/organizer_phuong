@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
+import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
 import 'package:phuong_for_organizer/presentation/org_profile_add_screen/widgets/add_link_wid.dart';
-import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/org_prof_view_screen.dart';
+
 
 class EditOrganizerProfileScreen extends StatefulWidget {
   final String organizerId;
@@ -17,13 +17,13 @@ class EditOrganizerProfileScreen extends StatefulWidget {
   final List<String> currentLinks;
 
   const EditOrganizerProfileScreen({
-    Key? key,
+    super.key,
     required this.organizerId,
     required this.currentName,
     required this.currentBio,
     required this.currentImageUrl,
     required this.currentLinks,
-  }) : super(key: key);
+  });
 
   @override
   State<EditOrganizerProfileScreen> createState() => _EditOrganizerProfileScreenState();
@@ -95,14 +95,23 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
 
       setState(() => _isLoading = false);
 
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          GentlePageTransition(
-            page: OrganizerProfileViewScreen(organizerId: widget.organizerId),
-          ),
-          (route) => false,
-        );
-      }
+     if (mounted) {
+      // Navigate back to MainScreen with profile tab selected
+      Navigator.
+      of(context).
+      pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => MainScreen(organizerId: '', initialIndex: 1,)
+        ),
+        (route) => false, // This removes all previous routes
+      );
+
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully')),
+      );
+    }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
@@ -170,6 +179,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
                   fit: BoxFit.cover,
                   placeholder: (context, url) => CircularProgressIndicator(color: purple),
                   errorWidget: (context, url, error) =>
+                      // ignore: prefer_const_constructors
                       Icon(Icons.add_a_photo, color: Colors.white, size: 40),
                 ),
               ),
