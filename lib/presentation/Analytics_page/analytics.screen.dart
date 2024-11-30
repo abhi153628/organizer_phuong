@@ -7,8 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:phuong_for_organizer/core/constants/color.dart';
+import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/presentation/Analytics_page/bloc/analytics_image_fetch_bloc.dart';
 import 'package:phuong_for_organizer/presentation/Analytics_page/widgets/analytics_items_widget.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/event_hosting_page.dart';
 
 class AnalyticsPage extends StatelessWidget {
 
@@ -127,7 +129,9 @@ AnalyticsItem(
                 SizedBox(height: screenHeight * 0.038),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(GentlePageTransition(page: EventHostingPage()));
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: purple,
                       padding: EdgeInsets.symmetric(
@@ -136,7 +140,7 @@ AnalyticsItem(
                       ),
                     ),
                     child: Text(
-                      'Publish an episode',
+                      'Publish an Event',
                       style: GoogleFonts.ibmPlexSansArabic(
                         color: black,
                         fontWeight: FontWeight.bold,

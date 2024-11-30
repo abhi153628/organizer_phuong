@@ -3,13 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
+
 import 'package:phuong_for_organizer/firebase_options.dart';
-import 'package:phuong_for_organizer/presentation/Analytics_page/analytics.screen.dart';
+
 import 'package:phuong_for_organizer/presentation/Analytics_page/bloc/analytics_image_fetch_bloc.dart';
-import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
-import 'package:phuong_for_organizer/presentation/loginpage/bloc/login_bloc_bloc.dart';
-import 'package:phuong_for_organizer/presentation/signup_page/auth_screen.dart';
+import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
 import 'package:phuong_for_organizer/presentation/wrapper.dart';
 
 
@@ -54,7 +52,7 @@ class MyApp extends StatelessWidget {
 
         
          
-        home: Wrapper()
+        home: EventListPage()
       ),
     );
   }

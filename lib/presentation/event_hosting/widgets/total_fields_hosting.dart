@@ -1,22 +1,18 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
 import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_service.dart';
+import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
+import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_image_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
-import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_bloc.dart';
-import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_event.dart';
-
 
 class TotalFields extends StatefulWidget {
   final Size size;
@@ -28,17 +24,18 @@ class TotalFields extends StatefulWidget {
 }
 
 class _TotalFieldsState extends State<TotalFields> {
+  final FirebaseEventService _eventService = FirebaseEventService();
+  final FirebaseService _firebaseService = FirebaseService();
 
-final FirebaseEventService _eventService = FirebaseEventService();
   // check if any checkbox is selected
   int? _selectedEventTypeIndex;
   bool _isAnyCheckboxSelected() {
     return _selectedEventTypeIndex != null;
   }
 
- List<String> _eventRules = [];
+  List<String> _eventRules = [];
   //!image
-XFile? _selectedImage;
+  XFile? _selectedImage;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _eventNameController = TextEditingController();
@@ -61,15 +58,14 @@ XFile? _selectedImage;
   final TextEditingController _timeController = TextEditingController();
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
-    String? selectedGenre;
+  String? selectedGenre;
 
-      
 //! GENRE SELECTION
   void handleGenreSelection(String? genre) {
     setState(() {
       selectedGenre = genre;
     });
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,22 +81,21 @@ XFile? _selectedImage;
             SizedBox(
               height: 10,
             ),
-    
+
             EventImage(
               size: widget.size,
               pickImage: (XFile image) {
-                 _selectedImage = image;
+                _selectedImage = image;
               },
             ),
             // **Event Basics**
             const SizedBox(height: 10),
             _eventNameField(), // Event Name
             const SizedBox(height: 28),
-            _eventOrganizerNameField(), // Organizer Name
-            const SizedBox(height: 28),
+
             _buildDateTimeFields(), // time and date
             const SizedBox(height: 28),
-    
+
             // **Event Details**
             _buildDescriptionField(), // Description
             const SizedBox(height: 28),
@@ -110,12 +105,12 @@ XFile? _selectedImage;
             const SizedBox(height: 28),
             _ticketAndSeatAvailabilityFields(), //ticket price and seat availiblity
             const SizedBox(height: 28),
-    
+
             // **Performance Type and Genre**
             _buildPerformanceType(), // Performance Type
             const SizedBox(height: 28),
             genreTypeSelecting(), // Genre Type Selection
-    
+
             // **Contact Information**
             _emailField(), // Email for Contact
             const SizedBox(height: 28),
@@ -123,30 +118,31 @@ XFile? _selectedImage;
             const SizedBox(height: 28),
             _instagramLinkField(), // Instagram Link
             const SizedBox(height: 28),
-    
+
             // **Special Instructions**
             _specialInstructionField(), // Special Instructions
             const SizedBox(height: 28),
-              Padding(
-                padding: const EdgeInsets.only(right: 180),
-                child: const Text(
-                            'Event Rules & Requirements',
-                            style: TextStyle(
-                color: Colors.white,
-                            
-                            ),
-                          ),
+            Padding(
+              padding: const EdgeInsets.only(right: 180),
+              child: const Text(
+                'Event Rules & Requirements',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
-              SizedBox(height: 10,),
-          EventRulesInput(
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            EventRulesInput(
               onRulesChanged: (List<String> updatedRules) {
                 setState(() {
                   _eventRules = updatedRules;
                 });
               },
             ),
-              const SizedBox(height: 28),
-    
+            const SizedBox(height: 28),
+
             // **Submit Button**
             Center(child: _submitButton()), // Submit/Save Button
             const SizedBox(height: 28),
@@ -181,46 +177,8 @@ XFile? _selectedImage;
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           style: const TextStyle(color: Colors.white),
-           enableInteractiveSelection: true,
-            readOnly: false, 
-        ),
-      ],
-    );
-  }
-
-  //! ORGANIZER NAME FIELD
-  Widget _eventOrganizerNameField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text('Organizer Name', style: TextStyle(color: Colors.white)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _organizerNameController,
-          decoration: InputDecoration(
-            hintText: "Your Name",
-            hintStyle: const TextStyle(color: Colors.grey),
-            filled: true,
-            fillColor: grey.withOpacity(0.2),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your name';
-            }
-            return null;
-          },
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: const TextStyle(color: Colors.white),
-           enableInteractiveSelection: true,
-            readOnly: false, 
+          enableInteractiveSelection: true,
+          readOnly: false,
         ),
       ],
     );
@@ -245,7 +203,7 @@ XFile? _selectedImage;
                   filled: true,
                   fillColor: grey.withOpacity(0.2),
                   suffixIcon: IconButton(
-                    icon:  Icon(Icons.calendar_today, color: purple),
+                    icon: Icon(Icons.calendar_today, color: purple),
                     onPressed: () => _selectDate(context),
                   ),
                   border: OutlineInputBorder(
@@ -281,7 +239,7 @@ XFile? _selectedImage;
                   filled: true,
                   fillColor: grey.withOpacity(0.2),
                   suffixIcon: IconButton(
-                    icon:  Icon(Icons.access_time, color: purple),
+                    icon: Icon(Icons.access_time, color: purple),
                     onPressed: () => _selectTime(context),
                   ),
                   border: OutlineInputBorder(
@@ -333,7 +291,7 @@ XFile? _selectedImage;
             return null;
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
-           enableInteractiveSelection: true,
+          enableInteractiveSelection: true,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -384,45 +342,45 @@ XFile? _selectedImage;
   }
 
   //! EVENT DURATION TIME
- Widget _eventDurationTime() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Event Duration', style: TextStyle(color: Colors.white)),
-      const SizedBox(height: 8),
-      TextFormField(
-        controller: _eventDurationTimeController, // Assuming you have a controller for this field
-        decoration: InputDecoration(
-          hintText: "Duration in hours (e.g., 2 hours)",
-          hintStyle: const TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: grey.withOpacity(0.2),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
+  Widget _eventDurationTime() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Event Duration', style: TextStyle(color: Colors.white)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller:
+              _eventDurationTimeController, // Assuming you have a controller for this field
+          decoration: InputDecoration(
+            hintText: "Duration in hours (e.g., 2 hours)",
+            hintStyle: const TextStyle(color: Colors.grey),
+            filled: true,
+            fillColor: grey.withOpacity(0.2),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
           ),
+          validator: (value) {
+            // Allow the field to be empty (null or empty value)
+            if (value == null || value.isEmpty) {
+              return null; // No validation error, it's optional
+            }
+
+            // Check if the input is a valid numeric duration (e.g., 2 hours, 90 minutes)
+            if (!RegExp(r'^\d+(\s+hours|\s+minutes)?$').hasMatch(value)) {
+              return 'Please enter a valid duration (e.g., 2 hours or 30 minutes)';
+            }
+
+            return null; // Valid value
+          },
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
-        validator: (value) {
-          // Allow the field to be empty (null or empty value)
-          if (value == null || value.isEmpty) {
-            return null; // No validation error, it's optional
-          }
-
-          // Check if the input is a valid numeric duration (e.g., 2 hours, 90 minutes)
-          if (!RegExp(r'^\d+(\s+hours|\s+minutes)?$').hasMatch(value)) {
-            return 'Please enter a valid duration (e.g., 2 hours or 30 minutes)';
-          }
-          
-          return null; // Valid value
-        },
-        keyboardType: TextInputType.number,
-        style: const TextStyle(color: Colors.white),
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
 //! TICKET PRICE
   Widget ticketPrice() {
@@ -536,7 +494,6 @@ XFile? _selectedImage;
                 keyboardType: TextInputType.number,
                 style: const TextStyle(color: Colors.white),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                
               ),
             ],
           ),
@@ -572,7 +529,8 @@ XFile? _selectedImage;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Choose a Music Genre', style: TextStyle(color: Colors.white)),
+        const Text('Choose a Music Genre',
+            style: TextStyle(color: Colors.white)),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.12,
           child: GenreSelectionWidget(onGenreSelected: handleGenreSelection),
@@ -622,8 +580,8 @@ XFile? _selectedImage;
           keyboardType: TextInputType.emailAddress,
           style: const TextStyle(color: Colors.white),
           autovalidateMode: AutovalidateMode.onUserInteraction,
-           enableInteractiveSelection: true,
-            readOnly: false, 
+          enableInteractiveSelection: true,
+          readOnly: false,
         ),
       ],
     );
@@ -651,7 +609,7 @@ XFile? _selectedImage;
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter the Facebook profile link';
+              return null;
             }
             // Check if the URL matches Facebook profile link pattern
             if (!RegExp(
@@ -664,8 +622,8 @@ XFile? _selectedImage;
           keyboardType: TextInputType.url,
           style: const TextStyle(color: Colors.white),
           autovalidateMode: AutovalidateMode.onUserInteraction,
-           enableInteractiveSelection: true,
-            readOnly: false, 
+          enableInteractiveSelection: true,
+          readOnly: false,
         ),
       ],
     );
@@ -693,7 +651,7 @@ XFile? _selectedImage;
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter the Instagram profile link';
+              return null;
             }
             // Check if the URL matches Instagram profile link pattern
             if (!RegExp(
@@ -706,8 +664,8 @@ XFile? _selectedImage;
           keyboardType: TextInputType.url,
           style: const TextStyle(color: Colors.white),
           autovalidateMode: AutovalidateMode.onUserInteraction,
-           enableInteractiveSelection: true,
-            readOnly: false, 
+          enableInteractiveSelection: true,
+          readOnly: false,
         ),
       ],
     );
@@ -740,137 +698,147 @@ XFile? _selectedImage;
           ),
           style: GoogleFonts.aBeeZee(color: white, fontWeight: FontWeight.w500),
           validator: (value) {
-        
             return null;
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
-           enableInteractiveSelection: true,
-            readOnly: false, 
+          enableInteractiveSelection: true,
+          readOnly: false,
         ),
       ],
     );
   }
 
-Widget _submitButton() {
-  return GlowingButton(
-    text: 'Set Live',
-    onPressed: () async {
-      if (_formKey.currentState!.validate()) {
-        try {
-          // Show loading indicator
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const Center(
-                child: CircularProgressIndicator(),
+  Widget _submitButton() {
+    return GlowingButton(
+      text: 'Set Live',
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          try {
+            OrganizerProfileAddingModal? currentUserProfile =
+                await _firebaseService.getCurrentUserProfile();
+            if (currentUserProfile == null || currentUserProfile.name == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Unable to retrieve organizer profile')),
               );
-            },
-          );
-
-          // Validate required fields
-          if (_selectedEventTypeIndex == null) {
-            Navigator.pop(context); // Dismiss loading
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please select a performance type')),
+              return;
+            }
+            // Show loading indicator
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             );
-            return;
-          }
 
-          if (selectedGenre == null || selectedGenre!.isEmpty) {
-            Navigator.pop(context); // Dismiss loading
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please select a genre')),
+            // Validate required fields
+            if (_selectedEventTypeIndex == null) {
+              Navigator.pop(context); // Dismiss loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Please select a performance type')),
+              );
+              return;
+            }
+
+            if (selectedGenre == null || selectedGenre!.isEmpty) {
+              Navigator.pop(context); // Dismiss loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select a genre')),
+              );
+              return;
+            }
+
+            if (selectedDate == null || selectedTime == null) {
+              Navigator.pop(context); // Dismiss loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select date and time')),
+              );
+              return;
+            }
+
+            // Create event modal
+            final event = EventHostingModal(
+              eventName: _eventNameController.text,
+              organizerName: currentUserProfile.name,
+              description: _descriptionController.text,
+              ticketPrice: double.tryParse(_ticketPriceController.text) ?? 0.0,
+              instagramLink: _instagramLinkController.text,
+              facebookLink: _facebookLinkController.text,
+              email: _emailController.text,
+              seatAvailabilityCount:
+                  double.tryParse(_seatAvailabilityCountController.text) ?? 0.0,
+              eventDurationTime:
+                  double.tryParse(_eventDurationTimeController.text) ?? 0.0,
+              specialInstruction: _specialInstructionController.text,
+              location: _locationController.text,
+              date: selectedDate,
+              time: selectedTime,
+              performanceType: _selectedEventTypeIndex,
+              genreType: selectedGenre,
+              eventRules: _eventRules,
             );
-            return;
-          }
 
-          if (selectedDate == null || selectedTime == null) {
-            Navigator.pop(context); // Dismiss loading
+            // Convert XFile to File if image is selected
+            File? imageFile;
+            if (_selectedImage != null) {
+              imageFile = File(_selectedImage!.path);
+            }
+
+            // Save event data and image
+            await _eventService.saveEvent(event, image: imageFile);
+
+            // Dismiss loading indicator
+            Navigator.pop(context);
+
+            // Show success message
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please select date and time')),
+              const SnackBar(content: Text('Event saved successfully!')),
             );
-            return;
+            Navigator.pop(context);
+
+            // Optionally navigate back or clear form
+            // Navigator.pop(context); // Uncomment to go back
+            _clearForm(); // Add this method to clear all form fields
+          } catch (e) {
+            // Dismiss loading indicator
+            Navigator.pop(context);
+
+            // Show error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error saving event: ${e.toString()}')),
+            );
           }
-
-          // Create event modal
-          final event = EventHostingModal(
-            eventName: _eventNameController.text,
-            organizerName: _organizerNameController.text,
-            description: _descriptionController.text,
-            ticketPrice: double.tryParse(_ticketPriceController.text) ?? 0.0,
-            instagramLink: _instagramLinkController.text,
-            facebookLink: _facebookLinkController.text,
-            email: _emailController.text,
-            seatAvailabilityCount: 
-                double.tryParse(_seatAvailabilityCountController.text) ?? 0.0,
-            eventDurationTime: 
-                double.tryParse(_eventDurationTimeController.text) ?? 0.0,
-            specialInstruction: _specialInstructionController.text,
-            location: _locationController.text,
-            date: selectedDate,
-            time: selectedTime,
-            performanceType: _selectedEventTypeIndex,
-            genreType: selectedGenre,
-             eventRules: _eventRules,
-          );
-
-          // Convert XFile to File if image is selected
-          File? imageFile;
-          if (_selectedImage != null) {
-            imageFile = File(_selectedImage!.path);
-          }
-
-          // Save event data and image
-          await _eventService.saveEvent(event, image: imageFile);
-
-          // Dismiss loading indicator
-          Navigator.pop(context);
-
-          // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event saved successfully!')),
-          );
-
-          // Optionally navigate back or clear form
-          // Navigator.pop(context); // Uncomment to go back
-          _clearForm(); // Add this method to clear all form fields
-
-        } catch (e) {
-          // Dismiss loading indicator
-          Navigator.pop(context);
-
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error saving event: ${e.toString()}')),
-          );
         }
-      }
-    },
-  );
-}
-void _clearForm() {
-  _eventNameController.clear();
-  _organizerNameController.clear();
-  _descriptionController.clear();
-  _ticketPriceController.clear();
-  _instagramLinkController.clear();
-  _facebookLinkController.clear();
-  _emailController.clear();
-  _seatAvailabilityCountController.clear();
-  _eventDurationTimeController.clear();
-  _specialInstructionController.clear();
-  _locationController.clear();
-  _dateController.clear();
-  _timeController.clear();
-  setState(() {
-    selectedDate = null;
-    selectedTime = null;
-    selectedGenre = null;
-    _selectedEventTypeIndex = null;
-    _selectedImage = null;
-  });
-}
+      },
+    );
+  }
+
+  void _clearForm() {
+    _eventNameController.clear();
+    _organizerNameController.clear();
+    _descriptionController.clear();
+    _ticketPriceController.clear();
+    _instagramLinkController.clear();
+    _facebookLinkController.clear();
+    _emailController.clear();
+    _seatAvailabilityCountController.clear();
+    _eventDurationTimeController.clear();
+    _specialInstructionController.clear();
+    _locationController.clear();
+    _dateController.clear();
+    _timeController.clear();
+    setState(() {
+      selectedDate = null;
+      selectedTime = null;
+      selectedGenre = null;
+      _selectedEventTypeIndex = null;
+      _selectedImage = null;
+    });
+  }
 
   // Add these functions in your _TotalFieldsState class:
   Future<void> _selectDate(BuildContext context) async {

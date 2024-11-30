@@ -79,6 +79,22 @@ class FirebaseService {
       throw Exception('Failed to get profile: $e');
     }
   }
+  Future<OrganizerProfileAddingModal?> getUserProfileById(String userId) async {
+  try {
+    final snapshot = await _firestore
+        .collection('organizerProfiles')
+        .doc(userId)
+        .get();
+    
+    if (snapshot.exists) {
+      return OrganizerProfileAddingModal.fromJson(snapshot.data()!);
+    }
+    return null;
+  } catch (e) {
+    print('Error fetching user profile: $e');
+    return null;
+  }
+}
 
   Future<void> updateProfile(OrganizerProfileAddingModal profile) async {
     try {

@@ -55,11 +55,11 @@ class FeedView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, color: Colors.red, size: 48),
-                SizedBox(height: 16),
+                const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
                 Text(
                   'Error: ${snapshot.error}',
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -68,7 +68,7 @@ class FeedView extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
+          return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -89,9 +89,9 @@ class FeedView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: MasonryGridView.builder(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: posts.length,
-            gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
             itemBuilder: (context, index) {
@@ -107,7 +107,7 @@ class FeedView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.grey[900],
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
                             offset: Offset(0, 4),
@@ -142,7 +142,7 @@ class FeedView extends StatelessWidget {
                                   aspectRatio: 1,
                                   child: Container(
                                     color: Colors.grey[850],
-                                    child: Icon(Icons.error, color: Colors.red),
+                                    child: const Icon(Icons.error, color: Colors.red),
                                   ),
                                 );
                               },
@@ -154,7 +154,7 @@ class FeedView extends StatelessWidget {
                               padding: const EdgeInsets.all(12.0),
                               child: Text(
                                 post['description'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
                                 ),
@@ -180,7 +180,7 @@ class FeedView extends StatelessWidget {
 class ImageViewerPage extends StatelessWidget {
   final Map<String, dynamic> post;
 
-  const ImageViewerPage({Key? key, required this.post}) : super(key: key);
+  const ImageViewerPage({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +195,7 @@ class ImageViewerPage extends StatelessWidget {
               top: 40,
               right: 20,
               child: IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
+                icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -221,7 +221,7 @@ class ImageViewerPage extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
@@ -231,10 +231,10 @@ class ImageViewerPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Text(
                     post['description'],
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),

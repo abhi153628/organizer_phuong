@@ -44,12 +44,10 @@ class EventHostingModal {
   });
 
   //! Convert Event object to Map for saving to Firestore
-  
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'eventName': eventName,
-       'eventId': eventId,
-      
+      'eventId': eventId,
       'organizerName': organizerName,
       'description': description,
       'ticketPrice': ticketPrice,
@@ -61,47 +59,57 @@ class EventHostingModal {
       'specialInstruction': specialInstruction,
       'location': location,
       'date': date?.toIso8601String(),
-      'time': time?.toString(), //  converting to a string format like HH:mm
+      'time': time?.toStorageString(), // Using the extension method
       'uploadedImageUrl': uploadedImageUrl,
       'performanceType': performanceType,
       'genreType': genreType,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
-      'eventRules': eventRules?.toList(), 
+      'eventRules': eventRules,
     };
   }
-
-  //!  Convert Firestore Map to Event object
 
   factory EventHostingModal.fromMap(Map<String, dynamic> map) {
     return EventHostingModal(
       eventName: map['eventName'],
-      eventId: map['eventId'], 
+      eventId: map['eventId'],
       organizerName: map['organizerName'],
       description: map['description'],
-      ticketPrice: map['ticketPrice'],
+      ticketPrice: (map['ticketPrice'] as num?)?.toDouble(),
       instagramLink: map['instagramLink'],
       facebookLink: map['facebookLink'],
       email: map['email'],
-      seatAvailabilityCount: map['seatAvailabilityCount'],
-      eventDurationTime: map['eventDurationTime'],
+      seatAvailabilityCount: (map['seatAvailabilityCount'] as num?)?.toDouble(),
+      eventDurationTime: (map['eventDurationTime'] as num?)?.toDouble(),
       specialInstruction: map['specialInstruction'],
       location: map['location'],
       date: map['date'] != null ? DateTime.parse(map['date']) : null,
-      time: map['time'] != null ? TimeOfDayFromString.fromString(map['time']) : null, // extension for TimeOfDay
+      time: TimeOfDayConverter.fromString(map['time']), // Using the extension method
       uploadedImageUrl: map['uploadedImageUrl'],
       performanceType: map['performanceType'],
       genreType: map['genreType'],
-      eventRules: map['eventRules'], 
+      eventRules: List<String>.from(map['eventRules'] ?? []),
     );
   }
 }
 
-extension TimeOfDayFromString on TimeOfDay {
-  static TimeOfDay fromString(String time) {
-    final parts = time.split(':');
-    final hour = int.parse(parts[0]);
-    final minute = int.parse(parts[1]);
-    return TimeOfDay(hour: hour, minute: minute);
+extension TimeOfDayConverter on TimeOfDay {
+  String toStorageString() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+
+  static TimeOfDay? fromString(String? value) {
+    if (value == null) return null;
+    try {
+      final parts = value.split(':');
+      if (parts.length == 2) {
+        final hour = int.parse(parts[0]);
+        final minute = int.parse(parts[1]);
+        return TimeOfDay(hour: hour, minute: minute);
+      }
+    } catch (e) {
+      print('Error parsing TimeOfDay: $e');
+    }
+    return null;
   }
 }
