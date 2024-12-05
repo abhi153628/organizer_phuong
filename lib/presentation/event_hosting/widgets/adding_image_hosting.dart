@@ -12,7 +12,7 @@ class EventImage extends StatefulWidget {
   const EventImage({
     Key? key,
     required this.size,
-    required this.pickImage,
+    required this.pickImage, String? initialImageUrl,
   }) : super(key: key);
 
   @override

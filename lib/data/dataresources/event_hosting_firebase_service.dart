@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
@@ -58,6 +57,73 @@ class FirebaseEventService {
       rethrow;
     } catch (e) {
       print('Unexpected error: $e');
+      rethrow;
+    }
+  }
+   Future<void> updateEvent(EventHostingModal event, {File? image}) async {
+    try {
+      if (event.eventId == null) {
+        throw Exception('Event ID is required for updating');
+      }
+
+      // Get reference to the existing event document
+      final eventRef = _firestore.collection(_eventCollection).doc(event.eventId);
+
+      // Convert event object to a Map
+      final eventData = event.toMap();
+
+      // If a new image is provided, upload it
+      if (image != null) {
+        final storageRef = _storage.ref('event_images/${event.eventId}.jpg');
+        await storageRef.putFile(image);
+        final downloadUrl = await storageRef.getDownloadURL();
+        eventData['uploadedImageUrl'] = downloadUrl;
+      }
+
+      // Update the event data in Firestore
+      await eventRef.update(eventData);
+    } on FirebaseException catch (e) {
+      print('Error updating event: $e');
+      rethrow;
+    } catch (e) {
+      print('Unexpected error: $e');
+      rethrow;
+    }
+  }
+
+  
+    Future<void> deleteEvent(String eventId) async {
+    try {
+      // Check if eventId is provided
+      if (eventId.isEmpty) {
+        throw Exception('Event ID is required for deletion');
+      }
+
+      // Reference to the event document
+      final eventRef = _firestore.collection(_eventCollection).doc(eventId);
+
+      // Get the event document to check if it exists and to retrieve image URL
+      final eventDoc = await eventRef.get();
+      if (!eventDoc.exists) {
+        throw Exception('Event not found');
+      }
+
+      // Delete the image from Firebase Storage if it exists
+      final eventData = eventDoc.data();
+      if (eventData != null && eventData.containsKey('uploadedImageUrl')) {
+        final storageRef = _storage.ref('event_images/$eventId.jpg');
+        await storageRef.delete();
+      }
+
+      // Delete the event document from Firestore
+      await eventRef.delete();
+
+      print('Event deleted successfully: $eventId');
+    } on FirebaseException catch (e) {
+      print('Firebase error deleting event: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('Unexpected error deleting event: $e');
       rethrow;
     }
   }

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
+import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_service.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
@@ -13,6 +14,7 @@ import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_ty
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
+import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
 
 class TotalFields extends StatefulWidget {
   final Size size;
@@ -792,13 +794,13 @@ class _TotalFieldsState extends State<TotalFields> {
             await _eventService.saveEvent(event, image: imageFile);
 
             // Dismiss loading indicator
-            Navigator.pop(context);
+           
 
             // Show success message
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Event saved successfully!')),
             );
-            Navigator.pop(context);
+         Navigator.pushAndRemoveUntil(context, GentlePageTransition(page: EventListPage()), (route) => true);
 
             // Optionally navigate back or clear form
             // Navigator.pop(context); // Uncomment to go back
@@ -900,14 +902,4 @@ class _TotalFieldsState extends State<TotalFields> {
   }
 }
 
-class GenreInfo {
-  final String name;
-  final String description;
-  final List<String> examples;
 
-  GenreInfo({
-    required this.name,
-    required this.description,
-    required this.examples,
-  });
-}

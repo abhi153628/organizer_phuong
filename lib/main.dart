@@ -34,11 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        // BlocProvider(
-        //   create: (context) => LoginBloc(FirebaseAuthServices(),
-        //   ),
-          
-        // )
+       
         BlocProvider(create: (context)=>AnalyticsImageFetchBloc())
       ],
       child: MaterialApp(
@@ -52,7 +48,7 @@ class MyApp extends StatelessWidget {
 
         
          
-        home: EventListPage()
+        home: Wrapper()
       ),
     );
   }

@@ -4,21 +4,31 @@ import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
 import 'package:phuong_for_organizer/data/models/genres_types_hosting.dart';
 
+class EditGenreSelected extends StatefulWidget {
+  final Function(String) onGenreSelected;
+  final String? initialGenre;
 
+  const EditGenreSelected({
+    Key? key, 
+    required this.onGenreSelected, 
+    this.initialGenre
+  }) : super(key: key);
 
-class GenreSelectionWidget extends StatefulWidget {
-    final ValueChanged<String?> onGenreSelected;
-
-  const GenreSelectionWidget({Key? key, required this.onGenreSelected, String? initialGenre}) : super(key: key);
   @override
-  _GenreSelectionWidgetState createState() => _GenreSelectionWidgetState();
+  _EditGenreSelectedState createState() => _EditGenreSelectedState();
 }
 
-class _GenreSelectionWidgetState extends State<GenreSelectionWidget> {
-  String? selectedGenre;
+class _EditGenreSelectedState extends State<EditGenreSelected> {
+  String? _selectedGenre;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _selectedGenre = widget.initialGenre;
+  }
+
+  @override
+ Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -67,7 +77,7 @@ class _GenreSelectionWidgetState extends State<GenreSelectionWidget> {
                     ),
                   );
                 }).toList(),
-                value: selectedGenre,
+                value: _selectedGenre,
                 hint: Text(
                   "Select Genre",
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -83,9 +93,9 @@ class _GenreSelectionWidgetState extends State<GenreSelectionWidget> {
                 menuBackgroundColor: black,
                 onChanged: (String? newValue) {
                   setState(() {
-                    selectedGenre = newValue;
+                    _selectedGenre = newValue;
                   });
-                  widget.onGenreSelected(newValue); //passing the selected genre to the ascess from the next page
+                  widget.onGenreSelected(newValue!); //passing the selected genre to the ascess from the next page
                 },
                 isExpanded: true,
                 closeButton: Container(

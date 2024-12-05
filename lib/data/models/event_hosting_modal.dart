@@ -59,7 +59,7 @@ class EventHostingModal {
       'specialInstruction': specialInstruction,
       'location': location,
       'date': date?.toIso8601String(),
-      'time': time?.toStorageString(), // Using the extension method
+      'time': time?.toStorageString(),// Using the extension method
       'uploadedImageUrl': uploadedImageUrl,
       'performanceType': performanceType,
       'genreType': genreType,
@@ -99,7 +99,7 @@ extension TimeOfDayConverter on TimeOfDay {
   }
 
   static TimeOfDay? fromString(String? value) {
-    if (value == null) return null;
+    if (value == null || value.isEmpty) return null;
     try {
       final parts = value.split(':');
       if (parts.length == 2) {

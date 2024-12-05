@@ -3,3 +3,230 @@ rubik
 
 for button
 dmSans
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:phuong_for_organizer/core/constants/color.dart';
+import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
+import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_service.dart';
+import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
+import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_image_hosting.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
+
+class EditEventPage extends StatefulWidget {
+  final EventHostingModal event;
+
+  const EditEventPage({Key? key, required this.event}) : super(key: key);
+
+  @override
+  _EditEventPageState createState() => _EditEventPageState();
+}
+
+class _EditEventPageState extends State<EditEventPage> {
+  final FirebaseEventService _eventService = FirebaseEventService();
+  final FirebaseService _firebaseService = FirebaseService();
+
+  late TextEditingController _eventNameController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _ticketPriceController;
+  late TextEditingController _instagramLinkController;
+  late TextEditingController _facebookLinkController;
+  late TextEditingController _emailController;
+  late TextEditingController _seatAvailabilityCountController;
+  late TextEditingController _eventDurationTimeController;
+  late TextEditingController _specialInstructionController;
+  late TextEditingController _locationController;
+  late TextEditingController _dateController;
+  late TextEditingController _timeController;
+
+  int? _selectedEventTypeIndex;
+  String? selectedGenre;
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  XFile? _selectedImage;
+  List<String> _eventRules = [];
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    _eventNameController = TextEditingController(text: widget.event.eventName);
+    _descriptionController = TextEditingController(text: widget.event.description);
+    _ticketPriceController = TextEditingController(text: widget.event.ticketPrice?.toString());
+    _instagramLinkController = TextEditingController(text: widget.event.instagramLink);
+    _facebookLinkController = TextEditingController(text: widget.event.facebookLink);
+    _emailController = TextEditingController(text: widget.event.email);
+    _seatAvailabilityCountController = TextEditingController(text: widget.event.seatAvailabilityCount?.toString());
+    _eventDurationTimeController = TextEditingController(text: widget.event.eventDurationTime?.toString());
+    _specialInstructionController = TextEditingController(text: widget.event.specialInstruction);
+    _locationController = TextEditingController(text: widget.event.location);
+    
+    // Date and Time
+    if (widget.event.date != null) {
+      selectedDate = widget.event.date;
+      _dateController = TextEditingController(text: "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}");
+    } else {
+      _dateController = TextEditingController();
+    }
+
+    if (widget.event.time != null) {
+      selectedTime = widget.event.time;
+      _timeController = TextEditingController(text: selectedTime?.format(context));
+    } else {
+      _timeController = TextEditingController();
+    }
+
+    // Performance Type and Genre
+    _selectedEventTypeIndex = widget.event.performanceType;
+    selectedGenre = widget.event.genreType;
+    _eventRules = widget.event.eventRules ?? [];
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers
+    _eventNameController.dispose();
+    _descriptionController.dispose();
+    _ticketPriceController.dispose();
+    _instagramLinkController.dispose();
+    _facebookLinkController.dispose();
+    _emailController.dispose();
+    _seatAvailabilityCountController.dispose();
+    _eventDurationTimeController.dispose();
+    _specialInstructionController.dispose();
+    _locationController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+    super.dispose();
+  }
+
+  // Implement the same methods as in the original form (date picker, time picker, etc.)
+  // _selectDate and _selectTime methods remain the same as in the original code
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Event', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // All the form fields from the original form, 
+                // but pre-populated with existing event data
+                EventImage(
+                  size: MediaQuery.of(context).size,
+                  pickImage: (XFile image) {
+                    _selectedImage = image;
+                  },
+                  initialImageUrl: widget.event.uploadedImageUrl,
+                ),
+                // Repeat all the form fields from the original form
+                // (Use the same widgets with pre-populated controllers)
+                _submitButton(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _submitButton() {
+    return GlowingButton(
+      text: 'Update Event',
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          try {
+            // Validate required fields (similar to original submit method)
+            if (_selectedEventTypeIndex == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select a performance type')),
+              );
+              return;
+            }
+
+            if (selectedGenre == null || selectedGenre!.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select a genre')),
+              );
+              return;
+            }
+
+            if (selectedDate == null || selectedTime == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please select date and time')),
+              );
+              return;
+            }
+
+            // Create updated event modal
+            final updatedEvent = EventHostingModal(
+              eventId: widget.event.eventId, // Keep the original event ID
+              eventName: _eventNameController.text,
+              organizerName: widget.event.organizerName, // Maintain original organizer name
+              description: _descriptionController.text,
+              ticketPrice: double.tryParse(_ticketPriceController.text) ?? 0.0,
+              instagramLink: _instagramLinkController.text,
+              facebookLink: _facebookLinkController.text,
+              email: _emailController.text,
+              seatAvailabilityCount: double.tryParse(_seatAvailabilityCountController.text) ?? 0.0,
+              eventDurationTime: double.tryParse(_eventDurationTimeController.text) ?? 0.0,
+              specialInstruction: _specialInstructionController.text,
+              location: _locationController.text,
+              date: selectedDate,
+              time: selectedTime,
+              performanceType: _selectedEventTypeIndex,
+              genreType: selectedGenre,
+              eventRules: _eventRules,
+              uploadedImageUrl: widget.event.uploadedImageUrl, // Maintain original image URL
+            );
+
+            // Convert XFile to File if new image is selected
+            File? imageFile;
+            if (_selectedImage != null) {
+              imageFile = File(_selectedImage!.path);
+            }
+
+            // Update event data and image
+            await _eventService.updateEvent(updatedEvent, image: imageFile);
+
+            // Show success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Event updated successfully!')),
+            );
+
+            // Navigate back to the previous screen
+            Navigator.pop(context, true); // Indicates successful update
+          } catch (e) {
+            // Show error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error updating event: ${e.toString()}')),
+            );
+          }
+        }
+      },
+    );
+  }
+
+  // Implement the same helper methods as in the original form
+  // (date picker, time picker, genre selection, etc.)
+}
