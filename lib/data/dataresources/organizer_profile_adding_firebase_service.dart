@@ -8,8 +8,9 @@ import 'package:uuid/uuid.dart';
 class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final String _collection = 'organizers';
 
+ 
+ final String _collection = 'organizers';
   // Upload image to Firebase Storage
   Future<String> uploadImage(File imageFile) async {
     try {
@@ -48,9 +49,7 @@ class FirebaseService {
         'bio': profile.bio,
         'imageUrl': profile.imageUrl,
         'links': profile.links,
-        // Keep the existing status and email fields
-        // 'status': querySnapshot.docs.first.data()['status'],
-        // 'email': currentUser.email,
+     
       });
 
       return organizerId;

@@ -50,6 +50,7 @@ class FirebaseEventService {
     try {
       final snapshot = await _firestore.collection('events').get();
       return snapshot.docs
+      //!here changes
           .map((doc) => EventHostingModal.fromMap(doc.data()))
           .toList();
     } on FirebaseException catch (e) {

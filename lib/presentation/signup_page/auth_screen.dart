@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
+import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
 import 'package:phuong_for_organizer/presentation/loginpage/forgot_password.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/profile_screen.dart';
 
@@ -92,7 +93,7 @@ Future<void> _handleLogin() async {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>  ProfileScreen(organizerEmail: _signupEmailController.text),
+          builder: (context) => MainScreen(organizerId: ''),
         ),
       );
     }

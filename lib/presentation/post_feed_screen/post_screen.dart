@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +7,7 @@ import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
 import 'dart:io';
 
 import 'package:phuong_for_organizer/data/dataresources/post_feed_firebase_service_class.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
@@ -20,31 +20,35 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   File? _selectedImage;
   final TextEditingController _descriptionController = TextEditingController();
   bool _isLoading = false;
-  final PostFeedFirebaseServiceClass _firebaseService = PostFeedFirebaseServiceClass();
+  final PostFeedFirebaseService _firebaseService = PostFeedFirebaseService();
+
+  // Ensure user is authenticated before creating post
+  Future<void> _checkUserAuthentication() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      _showError('Please log in to create a post');
+      return;
+    }
+  }
 
   Future<void> _pickAndEditImage() async {
     try {
       setState(() => _isLoading = true);
       
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
       
-      File imageFile;
-      if (_selectedImage != null) {
-        imageFile = _selectedImage!;
-      } else {
-        final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 80,
-        );
-        
-        if (image == null) {
-          setState(() => _isLoading = false);
-          return;
-        }
-        imageFile = File(image.path);
+      if (image == null) {
+        setState(() => _isLoading = false);
+        return;
       }
 
-      //! Converted image file to bytes for editor
+      File imageFile = File(image.path);
+
+      // Convert image file to bytes for editor
       final imageBytes = await imageFile.readAsBytes();
       
       final editedImage = await Navigator.push(
@@ -57,19 +61,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       );
 
       if (editedImage != null) {
-        //! Created a new temporary file for the edited image
+        // Create a new temporary file for the edited image
         final tempDir = await getTemporaryDirectory();
         final String tempPath = '${tempDir.path}/temp_edited_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
         File tempFile = File(tempPath);
         await tempFile.writeAsBytes(editedImage);
         
-        //! Update state with new image file
+        // Update state with new image file
         setState(() {
           _selectedImage = tempFile;
           _isLoading = false;
         });
 
-        //! Clean up old temporary file if it exists and is different from the new one
+        // Clean up old temporary file if it exists and is different from the new one
         if (imageFile.path.contains('temp_edited_image') && imageFile.path != tempPath) {
           try {
             await imageFile.delete();
@@ -94,39 +98,41 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ),
     );
   }
+
   Future<void> _createPost() async {
-  if (_selectedImage == null) {
-    _showError('Please select an image');
-    return;
+    // Check authentication first
+    await _checkUserAuthentication();
+
+    if (_selectedImage == null) {
+      _showError('Please select an image');
+      return;
+    }
+
+    try {
+      setState(() => _isLoading = true);
+
+      // Create post using the Firebase service
+      await _firebaseService.createPost(
+        imageFile: _selectedImage!,
+        description: _descriptionController.text.trim(),
+      );
+
+      setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Post created successfully!')),
+      );
+
+      // Navigate back after successful post
+      Navigator.pop(context);
+    } catch (e) {
+      setState(() => _isLoading = false);
+      _showError('Failed to create post: $e');
+    }
   }
-
-  try {
-    setState(() => _isLoading = true);
-
-    await _firebaseService.createPost(
-      _selectedImage!,
-      _descriptionController.text.trim(),
-    );
-
-    setState(() => _isLoading = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Post created successfully!')),
-    );
-
-    Navigator.pop(context);
-  } catch (e) {
-    setState(() => _isLoading = false);
-    _showError('Failed to create post: $e');
-  }
-}
-
-
- 
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -137,10 +143,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ),
         actions: [
           if (_selectedImage != null)
-          //! share button
             TextButton(
               onPressed: _isLoading ? null : _createPost,
-              child:  Text(
+              child: Text(
                 'Share',
                 style: TextStyle(
                   color: purple,
@@ -179,7 +184,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                         width: double.infinity,
                                         height: double.infinity,
                                         fit: BoxFit.cover,
-                                        key: ValueKey(_selectedImage!.path), //! Add key to force refresh
+                                        key: ValueKey(_selectedImage!.path),
                                       ),
                                       Positioned(
                                         right: 8,
@@ -224,12 +229,20 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                         ),
                       ),
-                    const  SizedBox(height: 10,),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.only(left: 15),
-                        child: Align(alignment:  Alignment.centerLeft,child: CstmText(text: 'Write your caption first', fontSize: 20,color: white,fontWeight: FontWeight.w400,)),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: CstmText(
+                            text: 'Write your caption first', 
+                            fontSize: 20,
+                            color: white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                      //! Description Input
+                      // Description Input
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: TextField(
@@ -249,7 +262,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide:  BorderSide(color: purple),
+                              borderSide: BorderSide(color: purple),
                             ),
                             filled: true,
                             fillColor: Colors.grey[900],
@@ -257,7 +270,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         ),
                       ),
 
-                      //! Preview Section
+                      // Preview Section
                       if (_selectedImage != null)
                         Padding(
                           padding: const EdgeInsets.all(16),
@@ -322,5 +335,4 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     _descriptionController.dispose();
     super.dispose();
   }
-  
 }

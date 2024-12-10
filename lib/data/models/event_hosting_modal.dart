@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class EventHostingModal {
   String? eventId;
+  String ?organizerId;
   String? eventName;
   String? organizerName;
   String? description;
@@ -20,10 +21,10 @@ class EventHostingModal {
   int? performanceType;
   String? genreType;
   List<String>? eventRules;
-  
 
   EventHostingModal({
     this.eventId,
+    this.organizerId,
     this.eventName,
     this.organizerName,
     this.description,
@@ -44,10 +45,11 @@ class EventHostingModal {
   });
 
   //! Convert Event object to Map for saving to Firestore
-    Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'eventName': eventName,
       'eventId': eventId,
+      'organizerId': organizerId,
       'organizerName': organizerName,
       'description': description,
       'ticketPrice': ticketPrice,
@@ -59,7 +61,7 @@ class EventHostingModal {
       'specialInstruction': specialInstruction,
       'location': location,
       'date': date?.toIso8601String(),
-      'time': time?.toStorageString(),// Using the extension method
+      'time': time?.toStorageString(), // Using the extension method
       'uploadedImageUrl': uploadedImageUrl,
       'performanceType': performanceType,
       'genreType': genreType,
@@ -73,6 +75,7 @@ class EventHostingModal {
     return EventHostingModal(
       eventName: map['eventName'],
       eventId: map['eventId'],
+      organizerId: map['organizerId'],
       organizerName: map['organizerName'],
       description: map['description'],
       ticketPrice: (map['ticketPrice'] as num?)?.toDouble(),
@@ -84,7 +87,8 @@ class EventHostingModal {
       specialInstruction: map['specialInstruction'],
       location: map['location'],
       date: map['date'] != null ? DateTime.parse(map['date']) : null,
-      time: TimeOfDayConverter.fromString(map['time']), // Using the extension method
+      time: TimeOfDayConverter.fromString(
+          map['time']), // Using the extension method
       uploadedImageUrl: map['uploadedImageUrl'],
       performanceType: map['performanceType'],
       genreType: map['genreType'],

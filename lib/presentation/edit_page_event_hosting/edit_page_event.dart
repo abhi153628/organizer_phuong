@@ -811,6 +811,7 @@ Widget _buildPerformanceType(dynamic size) {
 
             // Create updated event modal
             final updatedEvent = EventHostingModal(
+              organizerId: widget.event.organizerId,
               eventId: widget.event.eventId, // Keep the original event ID
               eventName: _eventNameController.text,
               organizerName: widget

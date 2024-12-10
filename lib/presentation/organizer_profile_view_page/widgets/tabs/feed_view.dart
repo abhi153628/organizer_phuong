@@ -2,25 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phuong_for_organizer/data/dataresources/post_feed_firebase_service_class.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+
 class FeedView extends StatelessWidget {
-  final PostFeedFirebaseServiceClass _firebaseService = PostFeedFirebaseServiceClass();
+  final PostFeedFirebaseService _firebaseService = PostFeedFirebaseService();
 
   void _showDeleteConfirmation(BuildContext context, String postId) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Delete this post?'),
-        backgroundColor: Colors.red[800],
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'DELETE',
-          textColor: Colors.white,
-          onPressed: () async {
-            await _firebaseService.deletePost(postId);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Post deleted successfully')),
-            );
-          },
-        ),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Post'),
+        content: const Text('Are you sure you want to delete this post?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await _firebaseService.deletePost(postId);
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Post deleted successfully')),
+                );
+              } catch (e) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete post: $e')),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }
@@ -40,13 +58,11 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _firebaseService.fetchPosts(),
+      stream: _firebaseService.fetchUserPosts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.purple,
-            ),
+            child: CircularProgressIndicator(color: Colors.purple),
           );
         }
         
@@ -89,7 +105,7 @@ class FeedView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: MasonryGridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: posts.length,
             gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -106,8 +122,8 @@ class FeedView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[900],
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
                             offset: Offset(0, 4),
@@ -175,6 +191,8 @@ class FeedView extends StatelessWidget {
     );
   }
 }
+
+// The ImageViewerPage remains the same as in your original code
 
 // Create a separate page for image viewing
 class ImageViewerPage extends StatelessWidget {

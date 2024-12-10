@@ -80,7 +80,7 @@ class _TotalFieldsState extends State<TotalFields> {
               fontSize: 15,
               color: white,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -124,16 +124,16 @@ class _TotalFieldsState extends State<TotalFields> {
             // **Special Instructions**
             _specialInstructionField(), // Special Instructions
             const SizedBox(height: 28),
-            Padding(
-              padding: const EdgeInsets.only(right: 180),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(right: 180),
+              child: Text(
                 'Event Rules & Requirements',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             EventRulesInput(
@@ -540,10 +540,10 @@ class _TotalFieldsState extends State<TotalFields> {
         if (selectedGenre != null && selectedGenre!.isNotEmpty)
           Text(
             "Selected Genre: $selectedGenre",
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         if (selectedGenre == null || selectedGenre!.isEmpty)
-          Text(
+          const Text(
             "Please select a genre.",
             style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
@@ -719,6 +719,7 @@ class _TotalFieldsState extends State<TotalFields> {
             OrganizerProfileAddingModal? currentUserProfile =
                 await _firebaseService.getCurrentUserProfile();
             if (currentUserProfile == null || currentUserProfile.name == null) {
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content: Text('Unable to retrieve organizer profile')),
@@ -727,6 +728,7 @@ class _TotalFieldsState extends State<TotalFields> {
             }
             // Show loading indicator
             showDialog(
+              // ignore: use_build_context_synchronously
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
@@ -766,6 +768,7 @@ class _TotalFieldsState extends State<TotalFields> {
             final event = EventHostingModal(
               eventName: _eventNameController.text,
               organizerName: currentUserProfile.name,
+             organizerId: currentUserProfile.id!,
               description: _descriptionController.text,
               ticketPrice: double.tryParse(_ticketPriceController.text) ?? 0.0,
               instagramLink: _instagramLinkController.text,
@@ -793,7 +796,7 @@ class _TotalFieldsState extends State<TotalFields> {
             // Save event data and image
             await _eventService.saveEvent(event, image: imageFile);
 
-            // Dismiss loading indicator
+        
            
 
             // Show success message
@@ -804,7 +807,7 @@ class _TotalFieldsState extends State<TotalFields> {
 
             // Optionally navigate back or clear form
             // Navigator.pop(context); // Uncomment to go back
-            _clearForm(); // Add this method to clear all form fields
+            _clearForm(); 
           } catch (e) {
             // Dismiss loading indicator
             Navigator.pop(context);
