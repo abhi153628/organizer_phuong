@@ -28,7 +28,7 @@ class EditEventPage extends StatefulWidget {
 
 class _EditEventPageState extends State<EditEventPage> {
   final FirebaseEventService _eventService = FirebaseEventService();
-  final FirebaseService _firebaseService = FirebaseService();
+  final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
   int? _selectedEventTypeIndex;
 
   late TextEditingController _eventNameController;

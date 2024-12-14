@@ -30,7 +30,7 @@ class EditOrganizerProfileScreen extends StatefulWidget {
 }
 
 class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen> {
-  final FirebaseService _firebaseService = FirebaseService();
+  final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
   String? _uploadedImageUrl;

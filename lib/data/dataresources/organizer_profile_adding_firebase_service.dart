@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
 import 'package:uuid/uuid.dart';
 
-class FirebaseService {
+class OrganizerProfileAddingFirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
@@ -81,8 +81,8 @@ class FirebaseService {
   Future<OrganizerProfileAddingModal?> getUserProfileById(String userId) async {
   try {
     final snapshot = await _firestore
-        .collection('organizerProfiles')
-        .doc(userId)
+        .collection('')
+        .doc()
         .get();
     
     if (snapshot.exists) {

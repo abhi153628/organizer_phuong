@@ -20,7 +20,7 @@ class FieldsOrgProfileWidget extends StatefulWidget {
 }
 
 class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
-  final FirebaseService _firebaseService = FirebaseService();
+  final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
   String? _uploadedImageUrl;

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +28,8 @@ class TotalFields extends StatefulWidget {
 
 class _TotalFieldsState extends State<TotalFields> {
   final FirebaseEventService _eventService = FirebaseEventService();
-  final FirebaseService _firebaseService = FirebaseService();
+  final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
+  // final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   // check if any checkbox is selected
   int? _selectedEventTypeIndex;
@@ -768,7 +770,7 @@ class _TotalFieldsState extends State<TotalFields> {
             final event = EventHostingModal(
               eventName: _eventNameController.text,
               organizerName: currentUserProfile.name,
-             organizerId: currentUserProfile.id!,
+             organizerId: currentUserProfile.id,
               description: _descriptionController.text,
               ticketPrice: double.tryParse(_ticketPriceController.text) ?? 0.0,
               instagramLink: _instagramLinkController.text,

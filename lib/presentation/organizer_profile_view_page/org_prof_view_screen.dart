@@ -22,7 +22,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseService _firebaseService = FirebaseService();
+    final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
 
     return DefaultTabController(
       length: 1,

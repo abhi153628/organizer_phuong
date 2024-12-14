@@ -15,7 +15,7 @@ class AnalyticsImageFetchBloc
 
   }Future<void> fetchImage(FetchProfileEvent event,Emitter <AnalyticsImageFetchState> emit)async{
     try {
-      final modal =await FirebaseService().getCurrentUserProfile();
+      final modal =await OrganizerProfileAddingFirebaseService().getCurrentUserProfile();
       emit(AnalyticsImageFetchSucess(modal: modal!));
 
       
