@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/data/dataresources/chat_services.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/chat_message_modal.dart';
@@ -28,15 +30,14 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
     backgroundColor: Colors.black,
     appBar: AppBar(
       elevation: 0,
-      title: const Text(
-        'Messages',
-        style: TextStyle(
-          fontFamily: 'Rubik',
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-      ),
+      title:  Text(
+              'Messages ',
+              style: GoogleFonts.ibmPlexSansArabic(
+                fontSize:  24,
+                fontWeight: FontWeight.bold,
+                color: white,
+              ),
+            ),
       backgroundColor: Colors.black,
     ),
     body: Column(

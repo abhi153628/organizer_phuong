@@ -97,8 +97,10 @@ LocationModel? _selectedLocation;
                 _selectedImage = image;
               },
             ),
+              const SizedBox(height: 30),
             // **Event Basics**
-            const SizedBox(height: 10),
+                 buildLocationField(),
+            const SizedBox(height: 28),
             _eventNameField(), // Event Name
             const SizedBox(height: 28),
 
@@ -108,9 +110,8 @@ LocationModel? _selectedLocation;
             // **Event Details**
             _buildDescriptionField(), // Description
             const SizedBox(height: 28),
-            buildLocationField(),
-          
-            const SizedBox(height: 28),
+       
+         
             _eventDurationTime(), // Duration
             const SizedBox(height: 28),
             _ticketAndSeatAvailabilityFields(), //ticket price and seat availiblity

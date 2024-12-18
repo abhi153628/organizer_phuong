@@ -32,7 +32,7 @@ class AnalyticsPage extends StatelessWidget {
             Text(
               'Analytics',
               style: GoogleFonts.ibmPlexSansArabic(
-                fontSize: screenWidth * 0.05,
+                fontSize: screenWidth * 0.06,
                 fontWeight: FontWeight.bold,
                 color: white,
               ),

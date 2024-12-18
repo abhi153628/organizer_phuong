@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -11,21 +12,23 @@ import 'package:phuong_for_organizer/presentation/event_detailed_page/event_deta
 class EventListPage extends StatelessWidget {
   final FirebaseEventService _eventService = FirebaseEventService();
 
+  EventListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          'My Events',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title:  Text(
+              'Events ',
+              style: GoogleFonts.ibmPlexSansArabic(
+                fontSize:  24,
+                fontWeight: FontWeight.bold,
+                color: white,
+              ),
+            ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -52,7 +55,7 @@ class EventListPage extends StatelessWidget {
   }
 
   Widget _buildErrorState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -85,7 +88,7 @@ class EventListPage extends StatelessWidget {
             color: Colors.grey[600]!,
             size: 80,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'No events found',
             style: TextStyle(
@@ -101,11 +104,11 @@ class EventListPage extends StatelessWidget {
 
   Widget _buildLoadingState() {
     return ListView.builder(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       itemCount: 5,
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.only(bottom: 16),
           child: Shimmer.fromColors(
             baseColor: Colors.grey[800]!,
             highlightColor: Colors.grey[700]!,
@@ -124,14 +127,14 @@ class EventListPage extends StatelessWidget {
 
   Widget _buildEventList(BuildContext context, List<QueryDocumentSnapshot> docs) {
     return ListView.builder(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       itemCount: docs.length,
       itemBuilder: (context, index) {
         final eventData = docs[index].data() as Map<String, dynamic>;
         final event = EventHostingModal.fromMap(eventData);
 
         return Padding(
-          padding: EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.only(bottom: 16),
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -159,29 +162,31 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
+  return Container(
+  height: 160,
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(color: purple.withOpacity(0.4), width: 2,style: BorderStyle.solid),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        blurRadius: 4,
+        offset: const Offset(0, 2),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Event Image with CachedNetworkImage
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              bottomLeft: Radius.circular(12),
-            ),
-            child: CachedNetworkImage(
+    ],
+  ),
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+        ),
+        child: Stack(
+          children: [
+             
+            CachedNetworkImage(
               imageUrl: event.uploadedImageUrl ?? '',
               width: 160,
               height: 160,
@@ -199,25 +204,52 @@ class _EventCard extends StatelessWidget {
                 width: 160,
                 height: 160,
                 color: Colors.grey[900],
-                child: Icon(
+                child: const Icon(
                   Icons.image_not_supported,
                   color: Colors.white54,
                   size: 40,
                 ),
               ),
             ),
-          ),
+            // Gradient overlay
+            Positioned.fill(
+              child: Positioned(
+                 top: 0,
+              bottom: 0,
+              right: -20,  // Shift to the right by 20 pixels
+              left: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.transparent,
+                         
+                        Colors.black.withOpacity(0.9),
+                        Colors.black.withOpacity(1),
+                      ],
+                      stops: [0.7, 0.9, 1,],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            
+          ],
+        ),
+      ),
 
           // Event Details
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     event.eventName ?? 'Untitled Event',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -225,7 +257,7 @@ class _EventCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
                   _buildInfoRow(
                     icon: Icons.calendar_today,
@@ -236,7 +268,7 @@ class _EventCard extends StatelessWidget {
 
                   if (event.time != null)
                     Padding(
-                      padding: EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.only(top: 4),
                       child: _buildInfoRow(
                         icon: Icons.access_time,
                         text: event.time!.format(context),
@@ -245,14 +277,14 @@ class _EventCard extends StatelessWidget {
 
                   if (event.location != null)
                     Padding(
-                      padding: EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.only(top: 4),
                       child: _buildInfoRow(
                         icon: Icons.location_on,
                         text: event.location!,
                       ),
                     ),
 
-                  Spacer(),
+                  const Spacer(),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -269,7 +301,7 @@ class _EventCard extends StatelessWidget {
                       ),
                       if (event.seatAvailabilityCount != null)
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 2,
                           ),
@@ -280,7 +312,7 @@ class _EventCard extends StatelessWidget {
                           ),
                           child: Text(
                             '${event.seatAvailabilityCount!.toInt()} seats',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                             ),
@@ -301,11 +333,11 @@ class _EventCard extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: purple, size: 16),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(color: Colors.white70),
+            style: const TextStyle(color: Colors.white70),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
