@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
@@ -58,13 +60,14 @@ class _TotalFieldsState extends State<TotalFields> {
       TextEditingController();
   final TextEditingController _specialInstructionController =
       TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
+
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? selectedGenre;
-    EventLocationModel? _eventLocation;
+  final TextEditingController _locationController = TextEditingController();
+LocationModel? _selectedLocation;
 
 //! GENRE SELECTION
   void handleGenreSelection(String? genre) {
@@ -105,13 +108,8 @@ class _TotalFieldsState extends State<TotalFields> {
             // **Event Details**
             _buildDescriptionField(), // Description
             const SizedBox(height: 28),
-           EnhancedLocationField(
-            onLocationSelected: (location) {
-              setState(() {
-                _eventLocation = location;
-              });
-            },
-          ),// Location
+            buildLocationField(),
+          
             const SizedBox(height: 28),
             _eventDurationTime(), // Duration
             const SizedBox(height: 28),
@@ -314,44 +312,65 @@ class _TotalFieldsState extends State<TotalFields> {
   }
 
   //! LOCATION FIELD
-  // Widget _buildLocationField() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       const Text('Location', style: TextStyle(color: Colors.white)),
-  //       const SizedBox(height: 8),
-  //       TextFormField(
-  //         controller: _locationController,
-  //         maxLines: 1,
-  //         decoration: InputDecoration(
-  //           hintText: 'Add Location',
-  //           hintStyle: GoogleFonts.aBeeZee(
-  //             color: white,
-  //             fontWeight: FontWeight.w300,
-  //           ),
-  //           filled: true,
-  //           fillColor: grey.withOpacity(0.1),
-  //           prefixIcon: Icon(
-  //             Icons.location_on,
-  //             color: purple,
-  //           ),
-  //           border: OutlineInputBorder(
-  //             borderRadius: BorderRadius.circular(10),
-  //             borderSide: BorderSide(color: grey.withOpacity(0.9)),
-  //           ),
-  //         ),
-  //         style: GoogleFonts.aBeeZee(color: white, fontWeight: FontWeight.w500),
-  //         validator: (value) {
-  //           if (value == null || value.isEmpty) {
-  //             return 'Please add a location';
-  //           }
-  //           return null;
-  //         },
-  //         autovalidateMode: AutovalidateMode.onUserInteraction,
-  //       ),
-  //     ],
-  //   );
-  // }
+Widget buildLocationField() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Location',
+        style: TextStyle(color: Colors.white)
+      ),
+      const SizedBox(height: 8),
+      GooglePlaceAutoCompleteTextField(
+        textEditingController: _locationController,
+        googleAPIKey: "AIzaSyCrEye_u6VwYQpCIp8eOBgGj71MThkQCDE", // Replace with your actual key
+        inputDecoration: InputDecoration(
+          hintText: 'Add Location',
+          hintStyle: GoogleFonts.aBeeZee(
+            color: white,
+            fontWeight: FontWeight.w300,
+          ),
+          filled: true,
+          fillColor: grey.withOpacity(0.1),
+          prefixIcon: Icon(
+            Icons.location_on,
+            color: purple,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: grey.withOpacity(0.9)),
+          ),
+        ),
+        debounceTime: 400, // Wait 400ms after user stops typing
+        countries: ["IN"], // Optional: Restrict to specific countries
+        isLatLngRequired: true,
+        getPlaceDetailWithLatLng: (postalCodeResponse) => true,
+        
+        // Modify the itemClick to prevent automatic focus change
+        itemClick: (Prediction prediction) {
+          // Explicitly set the text without losing focus
+          _locationController.text = prediction.description ?? '';
+          
+          // Update selected location
+          _selectedLocation = LocationModel(
+            placeId: prediction.placeId ?? '',
+            address: prediction.description ?? '',
+            latitude: double.tryParse(prediction.lat ?? '0') ?? 0,
+            longitude: double.tryParse(prediction.lng ?? '0') ?? 0,
+          );
+          
+          // Optionally, dismiss the keyboard or autocomplete suggestions
+          FocusScope.of(context).unfocus();
+        },
+        
+        textStyle: GoogleFonts.aBeeZee(
+          color: white,
+          fontSize: 16,
+        ),
+      ),
+    ],
+  );
+}
 
   //! EVENT DURATION TIME
   Widget _eventDurationTime() {
@@ -552,11 +571,7 @@ class _TotalFieldsState extends State<TotalFields> {
             "Selected Genre: $selectedGenre",
             style: const TextStyle(color: Colors.white),
           ),
-        if (selectedGenre == null || selectedGenre!.isEmpty)
-          const Text(
-            "Please select a genre.",
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-          ),
+      
       ],
     );
   }
@@ -736,6 +751,12 @@ class _TotalFieldsState extends State<TotalFields> {
               );
               return;
             }
+          //    if ( _locationController.text== null) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     const SnackBar(content: Text('Please select an event location')),
+          //   );
+          //   return;
+          // }
             // Show loading indicator
             showDialog(
               // ignore: use_build_context_synchronously
