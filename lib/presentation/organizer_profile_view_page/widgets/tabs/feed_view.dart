@@ -1,47 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/data/dataresources/post_feed_firebase_service_class.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 
 class FeedView extends StatelessWidget {
   final PostFeedFirebaseService _firebaseService = PostFeedFirebaseService();
 
-  void _showDeleteConfirmation(BuildContext context, String postId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Post'),
-        content: const Text('Are you sure you want to delete this post?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await _firebaseService.deletePost(postId);
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Post deleted successfully')),
-                );
-              } catch (e) {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to delete post: $e')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+ void _showDeleteConfirmation(BuildContext context, String postId) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      backgroundColor: black.withOpacity(0.6),
+      title: Row(
+        children: [
+          const Icon(Icons.warning, color: Colors.yellow, size: 30),
+          const SizedBox(width: 10),
+          const Text(
+            'Delete Post',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
-    );
-  }
+      content: const Text(
+        'Are you sure you want to delete this post?',
+        style: TextStyle(color: Colors.white),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              await _firebaseService.deletePost(postId);
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Post deleted successfully'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } catch (e) {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to delete post: $e'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.red, // Text color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          child: const Text('Delete'),
+        ),
+      ],
+    ),
+  );
+}
+
 
   void _showImageViewer(BuildContext context, Map<String, dynamic> post) {
     Navigator.of(context).push(
@@ -105,7 +138,7 @@ class FeedView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: MasonryGridView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
+         physics: const NeverScrollableScrollPhysics(),
             itemCount: posts.length,
             gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

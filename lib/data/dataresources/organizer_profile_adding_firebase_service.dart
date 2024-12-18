@@ -6,7 +6,7 @@ import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.
 import 'package:uuid/uuid.dart';
 
 class OrganizerProfileAddingFirebaseService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance; 
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
  
@@ -78,22 +78,7 @@ class OrganizerProfileAddingFirebaseService {
       throw Exception('Failed to get profile: $e');
     }
   }
-  Future<OrganizerProfileAddingModal?> getUserProfileById(String userId) async {
-  try {
-    final snapshot = await _firestore
-        .collection('')
-        .doc()
-        .get();
-    
-    if (snapshot.exists) {
-      return OrganizerProfileAddingModal.fromJson(snapshot.data()!);
-    }
-    return null;
-  } catch (e) {
-    print('Error fetching user profile: $e');
-    return null;
-  }
-}
+
 
   Future<void> updateProfile(OrganizerProfileAddingModal profile) async {
     try {

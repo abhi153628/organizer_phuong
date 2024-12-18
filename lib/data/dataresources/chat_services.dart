@@ -148,6 +148,21 @@ class OrganizerChatService {
             .toList());
   }
 
+ Future<void> deleteMessage(String chatRoomId, String messageId) async {
+    try {
+      // Delete the specific message from the messages subcollection
+      await _firestore
+          .collection('chatRooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .doc(messageId)
+          .delete();
+    } catch (e) {
+      print('Error deleting message: $e');
+      rethrow;
+    }
+  }
+
   Future<void> markMessagesAsRead(String chatRoomId) async {
     try {
       // Fetch current organizer's profile

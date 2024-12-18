@@ -13,6 +13,7 @@ import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_image_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/location_search_field.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
 import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
@@ -63,6 +64,7 @@ class _TotalFieldsState extends State<TotalFields> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? selectedGenre;
+    EventLocationModel? _eventLocation;
 
 //! GENRE SELECTION
   void handleGenreSelection(String? genre) {
@@ -103,7 +105,13 @@ class _TotalFieldsState extends State<TotalFields> {
             // **Event Details**
             _buildDescriptionField(), // Description
             const SizedBox(height: 28),
-            _buildLocationField(), // Location
+           EnhancedLocationField(
+            onLocationSelected: (location) {
+              setState(() {
+                _eventLocation = location;
+              });
+            },
+          ),// Location
             const SizedBox(height: 28),
             _eventDurationTime(), // Duration
             const SizedBox(height: 28),
@@ -306,44 +314,44 @@ class _TotalFieldsState extends State<TotalFields> {
   }
 
   //! LOCATION FIELD
-  Widget _buildLocationField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Location', style: TextStyle(color: Colors.white)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _locationController,
-          maxLines: 1,
-          decoration: InputDecoration(
-            hintText: 'Add Location',
-            hintStyle: GoogleFonts.aBeeZee(
-              color: white,
-              fontWeight: FontWeight.w300,
-            ),
-            filled: true,
-            fillColor: grey.withOpacity(0.1),
-            prefixIcon: Icon(
-              Icons.location_on,
-              color: purple,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: grey.withOpacity(0.9)),
-            ),
-          ),
-          style: GoogleFonts.aBeeZee(color: white, fontWeight: FontWeight.w500),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please add a location';
-            }
-            return null;
-          },
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-        ),
-      ],
-    );
-  }
+  // Widget _buildLocationField() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       const Text('Location', style: TextStyle(color: Colors.white)),
+  //       const SizedBox(height: 8),
+  //       TextFormField(
+  //         controller: _locationController,
+  //         maxLines: 1,
+  //         decoration: InputDecoration(
+  //           hintText: 'Add Location',
+  //           hintStyle: GoogleFonts.aBeeZee(
+  //             color: white,
+  //             fontWeight: FontWeight.w300,
+  //           ),
+  //           filled: true,
+  //           fillColor: grey.withOpacity(0.1),
+  //           prefixIcon: Icon(
+  //             Icons.location_on,
+  //             color: purple,
+  //           ),
+  //           border: OutlineInputBorder(
+  //             borderRadius: BorderRadius.circular(10),
+  //             borderSide: BorderSide(color: grey.withOpacity(0.9)),
+  //           ),
+  //         ),
+  //         style: GoogleFonts.aBeeZee(color: white, fontWeight: FontWeight.w500),
+  //         validator: (value) {
+  //           if (value == null || value.isEmpty) {
+  //             return 'Please add a location';
+  //           }
+  //           return null;
+  //         },
+  //         autovalidateMode: AutovalidateMode.onUserInteraction,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   //! EVENT DURATION TIME
   Widget _eventDurationTime() {

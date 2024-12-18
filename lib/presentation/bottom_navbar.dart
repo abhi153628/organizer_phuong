@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phuong_for_organizer/presentation/Analytics_page/analytics.screen.dart';
 import 'package:phuong_for_organizer/presentation/chat_section.dart/chat_list_page.dart';
-import 'package:phuong_for_organizer/presentation/chat_section.dart/chat_view_page.dart';
+
 import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/org_prof_view_screen.dart';
+import 'package:phuong_for_organizer/presentation/user_booked_events_list/user_booked_events_list.dart';
 
 class MainScreen extends StatefulWidget {
   final String organizerId;
@@ -31,6 +32,7 @@ class _MainScreenState extends State<MainScreen> {
       AnalyticsPage(),
         OrganizerChatListScreen(),
       OrganizerProfileViewScreen(organizerId: widget.organizerId),
+      MinimalistOrganizerBookingsScreen()
     
       
     ];
@@ -64,6 +66,7 @@ class _MainScreenState extends State<MainScreen> {
                   _buildNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
                    _buildNavItem(1, Icons.chat, Icons.person, 'chat'),
                   _buildNavItem(2, Icons.person_outline, Icons.person, 'Profile'),
+                    _buildNavItem(3, Icons.person_outline, Icons.person, 'events'),
                 ],
               ),
             ),

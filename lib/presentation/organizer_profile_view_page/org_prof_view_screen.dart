@@ -1,8 +1,6 @@
-// organizer_profile_view_screen.dart
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
@@ -15,214 +13,339 @@ import 'package:phuong_for_organizer/presentation/Edit_org_profile_screen/edit_o
 import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/widgets/tabs/feed_view.dart';
 import 'package:phuong_for_organizer/presentation/post_feed_screen/post_screen.dart';
 
-import 'package:phuong_for_organizer/presentation/welcome_page/welcome_page.dart';
-
 class OrganizerProfileViewScreen extends StatelessWidget {
-  const OrganizerProfileViewScreen({Key? key, required String organizerId}) : super(key: key);
+  const OrganizerProfileViewScreen({Key? key, required String organizerId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
+    final OrganizerProfileAddingFirebaseService _firebaseService =
+        OrganizerProfileAddingFirebaseService();
 
     return DefaultTabController(
       length: 1,
       child: Scaffold(
-        backgroundColor: black,
+        backgroundColor: black, // Darker background for better contrast
         body: FutureBuilder<OrganizerProfileAddingModal?>(
           future: _firebaseService.getCurrentUserProfile(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: purple));
+              return Center(
+                child: Lottie.asset(
+                  'asset/animation/Animation - 1731642056954.json',
+                  width: 150,
+                  height: 150,
+                ),
+              );
             }
-            
+
             if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return _buildErrorWidget(snapshot.error.toString());
             }
 
             if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('No profile found'));
+              return const Center(
+                child: Text(
+                  'No profile found',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              );
             }
 
             final profile = snapshot.data!;
-            
-            return ListView(
-              children: [
-                SizedBox(height: 30),
-                // Profile Details
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Followers Column
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CstmText(
-                          text: '1234',
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: white,
-                        ),
-                        SizedBox(height: 5),
-                        CstmText(
-                          text: 'Followers',
-                          fontSize: 13,
-                          color: white.withOpacity(0.8),
-                        )
-                      ],
-                    ),
-                    // Profile Picture
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Container(
-                        height: 120,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: white,
-                        ),
-                        child: profile.imageUrl != null
-                            ? ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl: profile.imageUrl!,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Center(
-                                    child: CircularProgressIndicator(color: purple),
-                                  ),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.person,
-                                    size: 60,
-                                    color: grey,
-                                  ),
-                                ),
-                              )
-                            : Icon(
-                                Icons.person,
-                                size: 60,
-                                color: grey,
-                              ),
-                      ),
-                    ),
-                    // Likes Column
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CstmText(
-                          color: white,
-                          text: '1234',
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(height: 5),
-                        CstmText(
-                          text: 'Likes',
-                          fontSize: 13,
-                          color: white.withOpacity(0.8),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                // Name
-                Center(
-                  child: CstmText(
-                    color: white,
-                    text: profile.name ?? 'Loading...',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                // Bio
-                SizedBox(height: 10),
-                Center(
-                  child: CstmText(
-                    text: profile.bio ?? 'Loading...',
-                    fontSize: 20,
-                    color: white,
-                  ),
-                ),
-                SizedBox(height: 1),
-                // Links
-                ...(profile.links ?? [])
-                    .map((link) => Center(
-                          child: CstmText(
-                            text: link,
-                            fontSize: 20,
-                            color: Colors.blue,
-                          ),
-                        ))
-                    .toList(),
-                SizedBox(height: 25),
-                // Buttons
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: purple,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              GentlePageTransition(
-                                page: EditOrganizerProfileScreen(
-                                  organizerId: profile.id ?? '',
-                                  currentName: profile.name ?? '',
-                                  currentBio: profile.bio ?? '',
-                                  currentImageUrl: profile.imageUrl ?? '',
-                                  currentLinks: profile.links ?? [],
-                                ),
-                              ),
-                            );
-                          },
-                          child: CstmText(
-                            text: 'Edit Profile',
-                            fontSize: 18,
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: OutlinedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: purple,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              GentlePageTransition(
-                                page: CreatePostScreen(),
-                              ),
-                            );
-                          },
-                          child: CstmText(
-                            text: 'Add Feed',
-                            fontSize: 18,
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
-                // Tab Bar
-                TabBar(
-                  tabs: [Tab(icon: Icon(Icons.image, color: purple))],
-                ),
-                SizedBox(
-                  height: 1000,
-                  child: TabBarView(
-                    children: [FeedView()],
-                  ),
-                ),
+
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                _buildSliverAppBar(profile),
+                _buildProfileInfo(profile, context),
+                _buildTabBarAndFeed(),
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.redAccent, size: 60),
+          const SizedBox(height: 16),
+          Text(
+            'Error: $error',
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSliverAppBar(OrganizerProfileAddingModal profile) {
+    return SliverAppBar(
+      expandedHeight: 300,
+      pinned: true,
+      backgroundColor: Colors.transparent,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Gradient Background
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      purple.withOpacity(0.3),
+                      black,
+                    ]),
+              ),
+            ),
+            // Profile Image
+            Positioned(
+              top: 70,
+              left: 0,
+              right: 0,
+              child: Hero(
+                tag: 'profile_image',
+                child: Container(
+                  height: 180,
+                  width: 180,
+                  margin: const EdgeInsets.symmetric(horizontal: 100),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: purple.withOpacity(0.3),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: profile.imageUrl != null
+                        ? CachedNetworkImage(
+                            imageUrl: profile.imageUrl!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(
+                                color: purple,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[850],
+                              child: const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.white54,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            color: Colors.grey[850],
+                            child: const Icon(
+                              Icons.person,
+                              size: 60,
+                              color: Colors.white54,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileInfo(
+      OrganizerProfileAddingModal profile, BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            // Name
+            Text(
+              profile.name ?? 'Loading...',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.3, end: 0),
+
+            // Bio
+            const SizedBox(height: 16),
+            Text(
+              profile.bio ?? 'Loading...',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 16,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3, end: 0),
+
+            // Links
+            const SizedBox(height: 16),
+            ...(profile.links ?? [])
+                .map((link) => _buildLinkItem(link))
+                .toList(),
+
+            const SizedBox(height: 24),
+
+            // Action Buttons
+            _buildActionButtons(profile, context),
+
+            const SizedBox(height: 24),
+
+            // Custom Tab Bar
+            TabBar(
+              tabs: const [
+                Tab(
+                  icon: Icon(Icons.grid_view_rounded),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLinkItem(String link) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: purple.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          link,
+          style: TextStyle(
+            color: purple,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(
+      OrganizerProfileAddingModal profile, BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: Expanded(
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(
+                  color: purple, width: 2), 
+              foregroundColor: purple, 
+          
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              elevation: 2,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                GentlePageTransition(
+                  page: EditOrganizerProfileScreen(
+                    organizerId: profile.id ?? '',
+                    currentName: profile.name ?? '',
+                    currentBio: profile.bio ?? '',
+                    currentImageUrl: profile.imageUrl ?? '',
+                    currentLinks: profile.links ?? [],
+                  ),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.edit,
+                    size: 20, color: purple), // Update icon for clarity
+                const SizedBox(width: 8),
+                Text(
+                  "Edit Profile",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildButton(
+            'Add Feed',
+            Icons.add_photo_alternate_outlined,
+            () {
+              Navigator.of(context).push(
+                GentlePageTransition(
+                  page: CreatePostScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    ).animate().fadeIn(duration: 700.ms).slideY(begin: 0.3, end: 0);
+  }
+
+  Widget _buildButton(String text, IconData icon, VoidCallback onPressed) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: purple,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 0,
+      ),
+      onPressed: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBarAndFeed() {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 1000,
+        child: TabBarView(
+          children: [FeedView()],
         ),
       ),
     );
