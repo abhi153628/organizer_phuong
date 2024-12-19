@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
+
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
+
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 
-import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
 import 'package:phuong_for_organizer/presentation/Edit_org_profile_screen/edit_org_prof_adding_screen.dart';
@@ -31,11 +30,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Lottie.asset(
-                  'asset/animation/Animation - 1731642056954.json',
-                  width: 150,
-                  height: 150,
-                ),
+                child: CircularProgressIndicator(color: purple,)
               );
             }
 
@@ -84,70 +79,124 @@ class OrganizerProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSliverAppBar(OrganizerProfileAddingModal profile) {
-    return SliverAppBar(
-      expandedHeight: 300,
-      pinned: true,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Gradient Background
+ Widget _buildSliverAppBar(OrganizerProfileAddingModal profile) {
+  return SliverAppBar(
+    iconTheme: const IconThemeData(color: Colors.white),
+    expandedHeight: 300,
+    pinned: true,
+    backgroundColor: Colors.transparent,
+    flexibleSpace: FlexibleSpaceBar(
+      background: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background Image or Gradient
+          if (profile.imageUrl != null)
+            // Cached Background Image with Fade Effect
+            Stack(
+              children: [
+                // Background image with ColorFiltered opacity
+                ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.5),
+                    BlendMode.darken,
+                  ),
+                  child: Transform.scale(
+                    scale: 2.4, // Scale up the image to ensure it fills the space
+                    child: CachedNetworkImage(
+                      imageUrl: profile.imageUrl!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              purple.withOpacity(0.3),
+                              black,
+                            ],
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              purple.withOpacity(0.3),
+                              black,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // Fade overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        black.withOpacity(0.7),
+                        black,
+                      ],
+                      stops: const [0.4, 0.8, 1.0],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            // Fallback Gradient
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      purple.withOpacity(0.3),
-                      black,
-                    ]),
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    purple.withOpacity(0.3),
+                    black,
+                  ],
+                ),
               ),
             ),
-            // Profile Image
-            Positioned(
-              top: 70,
-              left: 0,
-              right: 0,
-              child: Hero(
-                tag: 'profile_image',
-                child: Container(
-                  height: 180,
-                  width: 180,
-                  margin: const EdgeInsets.symmetric(horizontal: 100),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: purple.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: profile.imageUrl != null
-                        ? CachedNetworkImage(
-                            imageUrl: profile.imageUrl!,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                color: purple,
-                                strokeWidth: 2,
-                              ),
+          // Profile Image
+          Positioned(
+            top: 70,
+            left: 0,
+            right: 0,
+            child: Hero(
+              tag: 'profile_image',
+              child: Container(
+                height: 180,
+                width: 180,
+                margin: const EdgeInsets.symmetric(horizontal: 100),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: purple.withOpacity(0.3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: profile.imageUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: profile.imageUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child: CircularProgressIndicator(
+                              color: purple,
+                              strokeWidth: 2,
                             ),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.grey[850],
-                              child: const Icon(
-                                Icons.person,
-                                size: 60,
-                                color: Colors.white54,
-                              ),
-                            ),
-                          )
-                        : Container(
+                          ),
+                          errorWidget: (context, url, error) => Container(
                             color: Colors.grey[850],
                             child: const Icon(
                               Icons.person,
@@ -155,15 +204,24 @@ class OrganizerProfileViewScreen extends StatelessWidget {
                               color: Colors.white54,
                             ),
                           ),
-                  ),
+                        )
+                      : Container(
+                          color: Colors.grey[850],
+                          child: const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white54,
+                          ),
+                        ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildProfileInfo(
       OrganizerProfileAddingModal profile, BuildContext context) {
@@ -249,50 +307,49 @@ class OrganizerProfileViewScreen extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-            child: Expanded(
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(
-                  color: purple, width: 2), 
-              foregroundColor: purple, 
-          
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              elevation: 2,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                GentlePageTransition(
-                  page: EditOrganizerProfileScreen(
-                    organizerId: profile.id ?? '',
-                    currentName: profile.name ?? '',
-                    currentBio: profile.bio ?? '',
-                    currentImageUrl: profile.imageUrl ?? '',
-                    currentLinks: profile.links ?? [],
-                  ),
-                ),
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.edit,
-                    size: 20, color: purple), // Update icon for clarity
-                const SizedBox(width: 8),
-                Text(
-                  "Edit Profile",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+                  child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(
+              color: white.withOpacity(0.3), width: 2), 
+          foregroundColor: purple, 
+                  
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-        )),
+          elevation: 2,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            GentlePageTransition(
+              page: EditOrganizerProfileScreen(
+                organizerId: profile.id ?? '',
+                currentName: profile.name ?? '',
+                currentBio: profile.bio ?? '',
+                currentImageUrl: profile.imageUrl ?? '',
+                currentLinks: profile.links ?? [],
+              ),
+            ),
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.edit,
+                size: 20, color: purple), // Update icon for clarity
+            const SizedBox(width: 8),
+            Text(
+              "Edit Profile",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+                  ),
+                ),
         const SizedBox(width: 16),
         Expanded(
           child: _buildButton(
@@ -326,13 +383,13 @@ class OrganizerProfileViewScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 20),
+          Icon(icon, size: 20,color: black,),
           const SizedBox(width: 8),
           Text(
             text,
-            style: const TextStyle(
+            style:  TextStyle(color: black,
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

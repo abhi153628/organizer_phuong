@@ -66,7 +66,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
         controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
-            SliverAppBar(
+            SliverAppBar( iconTheme: const IconThemeData(
+    color: Colors.white, // Set your desired color here
+  ),
               expandedHeight: 500,
               floating: false,
               pinned: true,

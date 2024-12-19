@@ -9,6 +9,8 @@ import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_s
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
 import 'package:phuong_for_organizer/presentation/event_detailed_page/event_detailed_page.dart';
 
+
+
 class EventListPage extends StatelessWidget {
   final FirebaseEventService _eventService = FirebaseEventService();
 
@@ -19,39 +21,39 @@ class EventListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title:  Text(
-              'Events ',
-              style: GoogleFonts.ibmPlexSansArabic(
-                fontSize:  24,
-                fontWeight: FontWeight.bold,
-                color: white,
-              ),
-            ),
+        title: Text(
+          'Events ',
+          style: GoogleFonts.ibmPlexSansArabic(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: white,
+          ),
+        ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('eventCollection')
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return _buildErrorState();
-          }
+      body:// Replace only the Scaffold's body part in your existing code
+StreamBuilder<QuerySnapshot>(
+  stream: _eventService.getOrganizerEvents(),
+  builder: (context, snapshot) {
+    if (snapshot.hasError) {
+      return _buildErrorState();
+    }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildLoadingState();
-          }
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return _buildLoadingState();
+    }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return _buildEmptyState();
-          }
+    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      return _buildEmptyState();
+    }
 
-          return _buildEventList(context, snapshot.data!.docs);
-        },
-      ),
-    );
+    // Return the event list when data is available
+    return _buildEventList(context, snapshot.data!.docs);
+  },
+),
+);
   }
 
   Widget _buildErrorState() {
@@ -162,85 +164,74 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return Container(
-  height: 160,
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    border: Border.all(color: purple.withOpacity(0.4), width: 2,style: BorderStyle.solid),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.1),
-        blurRadius: 4,
-        offset: const Offset(0, 2),
-      ),
-    ],
-  ),
-  child: Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          bottomLeft: Radius.circular(12),
+    return Container(
+      height: 160,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: white.withOpacity(0.4),
+          width: 2,
+          style: BorderStyle.solid,
         ),
-        child: Stack(
-          children: [
-             
-            CachedNetworkImage(
-              imageUrl: event.uploadedImageUrl ?? '',
-              width: 160,
-              height: 160,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Shimmer.fromColors(
-                baseColor: Colors.grey[800]!,
-                highlightColor: Colors.grey[700]!,
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  color: Colors.grey[800],
-                ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 160,
+            height: 160,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
               ),
-              errorWidget: (context, url, error) => Container(
-                width: 160,
-                height: 160,
-                color: Colors.grey[900],
-                child: const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.white54,
-                  size: 40,
-                ),
-              ),
-            ),
-            // Gradient overlay
-            Positioned.fill(
-              child: Positioned(
-                 top: 0,
-              bottom: 0,
-              right: -20,  // Shift to the right by 20 pixels
-              left: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Colors.transparent,
-                         
-                        Colors.black.withOpacity(0.9),
-                        Colors.black.withOpacity(1),
-                      ],
-                      stops: [0.7, 0.9, 1,],
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: event.uploadedImageUrl ?? '',
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey[800]!,
+                      highlightColor: Colors.grey[700]!,
+                      child: Container(
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey[900],
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.white54,
+                        size: 40,
+                      ),
                     ),
                   ),
-                ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.9),
+                          Colors.black.withOpacity(1),
+                        ],
+                        stops: const [0.7, 0.9, 1.0],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            
-          ],
-        ),
-      ),
-
-          // Event Details
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -258,14 +249,12 @@ class _EventCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-
                   _buildInfoRow(
                     icon: Icons.calendar_today,
                     text: event.date != null
                         ? '${event.date!.day}/${event.date!.month}/${event.date!.year}'
                         : 'No Date',
                   ),
-
                   if (event.time != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
@@ -274,7 +263,6 @@ class _EventCard extends StatelessWidget {
                         text: event.time!.format(context),
                       ),
                     ),
-
                   if (event.location != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
@@ -283,9 +271,7 @@ class _EventCard extends StatelessWidget {
                         text: event.location!,
                       ),
                     ),
-
                   const Spacer(),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -295,7 +281,7 @@ class _EventCard extends StatelessWidget {
                             : 'Free',
                         style: TextStyle(
                           color: purple,
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -308,7 +294,8 @@ class _EventCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.grey[900],
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: purple.withOpacity(0.5)),
+                            border: Border.all(color: purple.withOpacity(0.5),
+                            ),boxShadow:[BoxShadow(color: purple.withOpacity(0.2),spreadRadius: 1)]
                           ),
                           child: Text(
                             '${event.seatAvailabilityCount!.toInt()} seats',
@@ -332,7 +319,7 @@ class _EventCard extends StatelessWidget {
   Widget _buildInfoRow({required IconData icon, required String text}) {
     return Row(
       children: [
-        Icon(icon, color: purple, size: 16),
+        Icon(icon, color: white, size: 16),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

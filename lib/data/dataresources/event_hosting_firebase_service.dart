@@ -1,49 +1,42 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
 
 class FirebaseEventService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+   final OrganizerProfileAddingFirebaseService _organizerService = OrganizerProfileAddingFirebaseService();
   String? eventId ;
   //! ID
   final String _eventCollection = 'eventCollection';
 //! UPLOADING THE EVENT 
- Future<void> saveEvent(EventHostingModal event, {File? image}) async {
-  try {
-    // Create a new event reference (doc) in Firestore
-    final eventRef = _firestore.collection(_eventCollection).doc();
+  Future<void> saveEvent(EventHostingModal event, {File? image}) async {
+    try {
+      final organizerId = await getCurrentOrganizerId();
+      if (organizerId == null) {
+        throw Exception('No organizer ID found');
+      }
 
-    // Convert event object to a Map and add the event ID
-    final eventData = event.toMap();
-    eventData['eventId'] = eventRef.id;
+      final eventRef = _firestore.collection(_eventCollection).doc();
+      final eventData = event.toMap();
+      eventData['eventId'] = eventRef.id;
+      eventData['organizerId'] = organizerId; // Add organizer ID
 
-    // If an image is provided, upload it to Firebase Storage with the event ID as the file name
-    if (image != null) {
-      // Change here: use eventRef.id as the filename in Firebase Storage
-      final storageRef = _storage.ref('event_images/${eventRef.id}.jpg');
-      
-      // Upload the image
-      await storageRef.putFile(image);
-      
-      // Get the download URL of the uploaded image
-      final downloadUrl = await storageRef.getDownloadURL();
-      
-      // Add the image URL to the event data
-      eventData['uploadedImageUrl'] = downloadUrl;
+      if (image != null) {
+        final storageRef = _storage.ref('event_images/${eventRef.id}.jpg');
+        await storageRef.putFile(image);
+        final downloadUrl = await storageRef.getDownloadURL();
+        eventData['uploadedImageUrl'] = downloadUrl;
+      }
+
+      await eventRef.set(eventData);
+    } catch (e) {
+      print('Error saving event: $e');
+      rethrow;
     }
-
-    // Save the event data (including event ID and image URL) to Firestore
-    await eventRef.set(eventData);
-  } on FirebaseException catch (e) {
-    print('Error saving event: $e');
-    rethrow;
-  } catch (e) {
-    print('Unexpected error: $e');
-    rethrow;
   }
-}
 
 
   Future<List<EventHostingModal>> getEvents() async {
@@ -125,6 +118,33 @@ class FirebaseEventService {
       rethrow;
     } catch (e) {
       print('Unexpected error deleting event: $e');
+      rethrow;
+    }
+  }
+    Future<String?> getCurrentOrganizerId() async {
+    try {
+      final profile = await _organizerService.getCurrentUserProfile();
+      return profile?.id;
+    } catch (e) {
+      print('Error getting organizer ID: $e');
+      return null;
+    }
+  }
+
+  Stream<QuerySnapshot> getOrganizerEvents() async* {
+    try {
+      final organizerId = await getCurrentOrganizerId();
+      if (organizerId == null) {
+        throw Exception('No organizer ID found');
+      }
+
+      yield* _firestore
+          .collection(_eventCollection)
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } catch (e) {
+      print('Error in getOrganizerEvents: $e');
       rethrow;
     }
   }

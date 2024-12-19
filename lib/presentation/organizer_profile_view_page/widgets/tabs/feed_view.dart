@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
@@ -88,14 +89,13 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _firebaseService.fetchUserPosts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.purple),
+          return Center(
+            child: CircularProgressIndicator(color: purple),
           );
         }
         
@@ -138,7 +138,7 @@ class FeedView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(5.0),
           child: MasonryGridView.builder(
-         physics: const NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: posts.length,
             gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -168,33 +168,30 @@ class FeedView extends StatelessWidget {
                         children: [
                           Hero(
                             tag: 'post-${post['id']}',
-                            child: Image.network(
-                              post['imageUrl'],
+                            child: CachedNetworkImage(
+                              imageUrl: post['imageUrl'],
                               fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return AspectRatio(
-                                  aspectRatio: 1,
+                              placeholder: (context, url) => AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  color: Colors.grey[850],
                                   child: Center(
                                     child: CircularProgressIndicator(
-                                      value: loadingProgress.expectedTotalBytes != null
-                                          ? loadingProgress.cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes!
-                                          : null,
-                                      color: Colors.purple,
+                                      color: purple,
                                     ),
                                   ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Container(
-                                    color: Colors.grey[850],
-                                    child: const Icon(Icons.error, color: Colors.red),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  color: Colors.grey[850],
+                                  child: const Icon(
+                                    Icons.error,
+                                    color: Colors.red,
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
                           ),
                           if (post['description'] != null && 
@@ -225,9 +222,6 @@ class FeedView extends StatelessWidget {
   }
 }
 
-// The ImageViewerPage remains the same as in your original code
-
-// Create a separate page for image viewing
 class ImageViewerPage extends StatelessWidget {
   final Map<String, dynamic> post;
 
@@ -241,7 +235,6 @@ class ImageViewerPage extends StatelessWidget {
         onTap: () => Navigator.of(context).pop(),
         child: Stack(
           children: [
-            // Close button
             Positioned(
               top: 40,
               right: 20,
@@ -250,21 +243,35 @@ class ImageViewerPage extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
-            // Image
             Center(
               child: Hero(
                 tag: 'post-${post['id']}',
                 child: InteractiveViewer(
                   minScale: 0.5,
                   maxScale: 4.0,
-                  child: Image.network(
-                    post['imageUrl'],
+                  child: CachedNetworkImage(
+                    imageUrl: post['imageUrl'],
                     fit: BoxFit.contain,
+                    placeholder: (context, url) => Container(
+                      color: Colors.transparent,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: purple,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.transparent,
+                      child: const Icon(
+                        Icons.error,
+                        color: Colors.red,
+                        size: 48,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-            // Description
             if (post['description'] != null && 
                 post['description'].toString().isNotEmpty)
               Positioned(
@@ -298,3 +305,6 @@ class ImageViewerPage extends StatelessWidget {
     );
   }
 }
+
+
+

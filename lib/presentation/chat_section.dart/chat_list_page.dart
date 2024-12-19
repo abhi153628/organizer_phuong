@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
+import 'package:phuong_for_organizer/core/widgets/cstm_drawer.dart';
 import 'package:phuong_for_organizer/data/dataresources/chat_services.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/chat_message_modal.dart';
@@ -28,12 +29,12 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
  Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: Colors.black,
-    appBar: AppBar(
+    appBar: AppBar(  iconTheme: const IconThemeData(color: Colors.white),
       elevation: 0,
       title:  Text(
               'Messages ',
               style: GoogleFonts.ibmPlexSansArabic(
-                fontSize:  24,
+                fontSize:  22,
                 fontWeight: FontWeight.bold,
                 color: white,
               ),
@@ -158,33 +159,11 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
         ),
       ],
     ),
+    drawer: CustomDrawer(),
   );
 }
 
-  // Future<String> _getSenderName(String userId, List<ChatRoom> chatRooms) async {
-  //   try {
-  //     // Find the chat room for the specific user
-  //     final chatRoom = chatRooms.firstWhere(
-  //       (element) => element.userId == userId,
-  //       orElse: () => throw Exception('No chat room found for user'),
-  //     );
-
-  //     // Get messages for this chat room
-  //     final messages = await _chatService.getMessages(chatRoom.id).first;
-
-  //     // If messages exist, return the sender name of the first message
-  //     if (messages.isNotEmpty) {
-  //       return messages.first.senderName;
-  //     }
-
-  //     // If no messages, return a default or fallback name
-  //     return 'Unknown User';
-  //   } catch (e) {
-  //     print('Error getting sender name: $e');
-  //     return 'Unknown User';
-  //   }
-  // }
-
+  
   Widget _buildChatTile(
     BuildContext context,
     ChatRoom chatRoom,

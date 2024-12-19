@@ -106,7 +106,10 @@ class EventDetailScreen extends StatelessWidget {
                 // Bookings List
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildBookingItem(eventDetails.bookings[index], index),
+                    (context, index) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildBookingItem(eventDetails.bookings[index], index),
+                    ),
                     childCount: eventDetails.bookings.length,
                   ),
                 ),
@@ -226,6 +229,7 @@ Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
         '\₹${booking.totalPrice.toStringAsFixed(2)}',
         style: GoogleFonts.ibmPlexSans(
           color: _primaryColor,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -285,7 +289,7 @@ Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
         Text(
           value,
           style: GoogleFonts.ibmPlexSans(
-            color: _textColor,
+            color: red.withOpacity(0.8),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),

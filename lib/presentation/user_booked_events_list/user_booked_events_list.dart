@@ -3,18 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
+import 'package:phuong_for_organizer/core/widgets/cstm_drawer.dart';
 import 'package:phuong_for_organizer/data/dataresources/booked_event_services.dart';
 import 'package:phuong_for_organizer/data/models/booked_events_modal.dart';
 import 'package:phuong_for_organizer/presentation/user_booked_events_list/revenue_detailed_page.dart';
 
-class MinimalistOrganizerBookingsScreen extends StatefulWidget {
-  const MinimalistOrganizerBookingsScreen({Key? key}) : super(key: key);
+class EventRevenuePage extends StatefulWidget {
+  const EventRevenuePage({Key? key}) : super(key: key);
 
   @override
-  _MinimalistOrganizerBookingsScreenState createState() => _MinimalistOrganizerBookingsScreenState();
+  _EventRevenuePageState createState() => _EventRevenuePageState();
 }
 
-class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerBookingsScreen> {
+class _EventRevenuePageState extends State<EventRevenuePage> {
   final OrganizerBookingService _bookingService = OrganizerBookingService();
 
   // Minimalist color palette
@@ -63,13 +64,13 @@ class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerB
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(drawer: CustomDrawer(),
       backgroundColor: _backgroundColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             // Minimalist App Bar
-            SliverAppBar(
+            SliverAppBar(  iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: _backgroundColor,
               elevation: 0,
               expandedHeight: 50,
@@ -100,7 +101,10 @@ class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerB
             // Bookings List
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildBookingItem(_filteredBookings[index], index),
+                (context, index) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildBookingItem(_filteredBookings[index], index),
+                ),
                 childCount: _filteredBookings.length,
               ),
             ),
@@ -266,7 +270,7 @@ class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerB
           label,
           style: GoogleFonts.ibmPlexSans(
             color: _primaryColor,
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -274,7 +278,7 @@ class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerB
         Text(
           value,
           style: GoogleFonts.ibmPlexSans(
-            color: _textColor,
+            color: red.withOpacity(0.8),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -305,6 +309,7 @@ class _MinimalistOrganizerBookingsScreenState extends State<MinimalistOrganizerB
         style: GoogleFonts.ibmPlexSans(
           color: _primaryColor,
           fontWeight: FontWeight.bold,
+          fontSize: 16
         ),
       ),
       onTap: () => _navigateToEventDetails(booking.eventName),
