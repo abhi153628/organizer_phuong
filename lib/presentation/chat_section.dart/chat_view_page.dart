@@ -377,6 +377,17 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
       ),
     );
   }
+  String _getInitial() {
+    if (widget.senderName.isEmpty) {
+      return '?';
+    }
+    return widget.senderName[0].toUpperCase();
+  }
+
+  // Add this helper method
+  String _getDisplayName() {
+    return widget.senderName.isEmpty ? 'Unknown User' : widget.senderName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -400,7 +411,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
               ),
               child: Center(
                 child: Text(
-                  widget.senderName[0].toUpperCase(),
+                  _getInitial(),
                   style: const TextStyle(
                     fontFamily: 'IBMPlexSansArabic',
                     fontSize: 18,
@@ -410,18 +421,21 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.senderName,
-                  style: const TextStyle(
-                    fontFamily: 'Rubik',
-                    fontSize: 16,
-                    color: Colors.white,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getDisplayName(),
+                    style: const TextStyle(
+                      fontFamily: 'Rubik',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -432,129 +446,144 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
             child: Container(
               decoration: const BoxDecoration(
                 color: Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30)),
+                borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30)),
-                child: _chatRoomId == null || _currentUserId == null
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF9791FF),
-                        ),
-                      )
-                    : StreamBuilder<List<ChatMessage>>(
-                        stream: _chatService.getMessages(_chatRoomId!),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Color(0xFF9791FF),
-                              ),
-                            );
-                          }
-
-                          final messages = snapshot.data!;
-                          return ListView.builder(
-                            controller: _scrollController,
-                            reverse: true,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            itemCount: messages.length,
-                            itemBuilder: (context, index) {
-                              final message = messages[index];
-
-                              // Use the fetched current user ID
-                              final isCurrentUser =
-                                  message.senderId == _currentUserId;
-
-                              return _buildMessageBubble(
-                                isCurrentUser: isCurrentUser,
-                                message: message,
-                              );
-                            },
-                          );
-                        },
-                      ),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                child: _buildChatContent(),
               ),
             ),
           ),
-          Container(
-            color: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E1E1E),
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: const Color(0xFF9791FF).withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: TextField(
-                      controller: _messageController,
-                      style: const TextStyle(
-                        fontFamily: 'Rubik',
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Type a message...',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Rubik',
-                          color: Colors.grey[400],
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                      onSubmitted: (_) => _sendMessage(),
-                    ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatContent() {
+    if (_chatRoomId == null || _currentUserId == null) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xFF9791FF),
+        ),
+      );
+    }
+
+    return StreamBuilder<List<ChatMessage>>(
+      stream: _chatService.getMessages(_chatRoomId!),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFF9791FF),
+            ),
+          );
+        }
+
+        final messages = snapshot.data!;
+        if (messages.isEmpty) {
+          return Center(
+            child: Text(
+              'No messages yet',
+              style: TextStyle(
+                fontFamily: 'Rubik',
+                color: Colors.grey[400],
+                fontSize: 16,
+              ),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          controller: _scrollController,
+          reverse: true,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            final message = messages[index];
+            final isCurrentUser = message.senderId == _currentUserId;
+            return _buildMessageBubble(
+              isCurrentUser: isCurrentUser,
+              message: message,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      color: Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E),
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: const Color(0xFF9791FF).withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: TextField(
+                controller: _messageController,
+                style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  color: Colors.white,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Type a message...',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Rubik',
+                    color: Colors.grey[400],
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
                   ),
                 ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: _sendMessage,
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF9791FF), Color(0xFF7367F0)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF9791FF).withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ],
+                onSubmitted: (_) => _sendMessage(),
+              ),
             ),
           ),
+          const SizedBox(width: 12),
+          _buildSendButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSendButton() {
+    return GestureDetector(
+      onTap: _sendMessage,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF9791FF), Color(0xFF7367F0)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF9791FF).withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.send,
+          color: Colors.white,
+          size: 24,
+        ),
       ),
     );
   }

@@ -169,6 +169,9 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
     ChatRoom chatRoom,
     String senderName,
   ) {
+    final initial = (senderName.isNotEmpty) 
+        ? senderName[0].toUpperCase() 
+        : '?';
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 300),
@@ -212,7 +215,7 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    senderName[0].toUpperCase(),
+                    initial,
                     style: const TextStyle(
                       fontFamily: 'IBMPlexSansArabic',
                       fontSize: 20,
@@ -228,7 +231,7 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      senderName,
+                      senderName.isEmpty ? 'Unknown User' : senderName,
                       style: const TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 16,
@@ -238,7 +241,7 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      chatRoom.lastMessage,
+                      chatRoom.lastMessage.isEmpty ? 'No messages yet' : chatRoom.lastMessage,
                       style: TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 14,
@@ -264,6 +267,7 @@ class _OrganizerChatListScreenState extends State<OrganizerChatListScreen> {
       ),
     );
   }
+
 
   String _formatTimestampToIndianTime(Timestamp timestamp) {
     final dateTime =

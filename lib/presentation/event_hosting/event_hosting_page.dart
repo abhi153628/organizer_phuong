@@ -53,7 +53,7 @@ class _EventHostingPageState extends State<EventHostingPage> {
           slivers: [
             CustomSliverAppBar(
               scrollProgress: _scrollProgress,
-              title: 'Profile Review',
+              title: 'Profile Hosting',
               scaffoldColor: scaffoldColor,
               onIconPressed: () {},
             ),

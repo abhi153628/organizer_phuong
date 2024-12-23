@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
+import 'package:phuong_for_organizer/core/widgets/transition.dart';
+import 'package:phuong_for_organizer/presentation/event_hosting/widgets/info_page.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
   final double scrollProgress;
@@ -94,8 +96,10 @@ class CustomSliverAppBar extends StatelessWidget {
       actions: [
         Padding(padding: EdgeInsets.only(right: 10),
           child: IconButton(
-            icon: Icon(Icons.info, color: Colors.white),
-            onPressed: onIconPressed,
+            icon: Icon(Icons.info, color: Colors.redAccent),
+            onPressed: (){
+              Navigator.of(context).push(GentlePageTransition(page: EventHostingInfoPage()));
+            },
           ),
         ),
       ],

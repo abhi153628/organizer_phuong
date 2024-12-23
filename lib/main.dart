@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           textSelectionTheme: TextSelectionThemeData(selectionColor: grey),
           inputDecorationTheme: InputDecorationTheme(
-            errorStyle: TextStyle(color: purple, fontSize: 13),
+            errorStyle: TextStyle(color: red, fontSize: 13),
           ),
         ),
 

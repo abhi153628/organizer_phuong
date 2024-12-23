@@ -11,10 +11,10 @@ import 'package:shimmer/shimmer.dart';
 
 class EventDetailPage extends StatefulWidget {
   final EventHostingModal event;
-
-  const EventDetailPage({Key? key, required this.event}) : super(key: key);
+  const EventDetailPage({super.key, required this.event});
 
   @override
+  // ignore: library_private_types_in_public_api
   _EventDetailPageState createState() => _EventDetailPageState();
 }
 
@@ -47,7 +47,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   void _showDeleteConfirmation(String eventId) async {
-    bool? result = await EventDeleteBottomSheet.show(context, eventId);
+    bool? result = await EventDeleteBottomSheet.show(context, eventId,eventId);
 
     if (result == true) {
       Navigator.of(context).pop();

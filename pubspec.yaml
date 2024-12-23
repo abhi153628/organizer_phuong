@@ -65,6 +65,7 @@ dependencies:
 
   google_places_flutter: ^2.0.5
   google_maps_flutter: ^2.10.0
+  fluttertoast: ^8.2.10
 
  
  

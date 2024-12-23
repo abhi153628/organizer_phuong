@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:phuong_for_organizer/core/widgets/transition.dart';
+import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -21,6 +23,9 @@ class EventListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          Navigator.of(context).push(GentlePageTransition(page: MainScreen(organizerId: '')));
+        }, icon: Icon(Icons.arrow_back)),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
