@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
@@ -11,10 +10,10 @@ class EventNameField extends StatelessWidget {
   final bool isLocationFieldActive;
 
   const EventNameField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.isLocationFieldActive,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +62,13 @@ class DateTimeFields extends StatelessWidget {
   final Function() onTimeTap;
 
   const DateTimeFields({
-    Key? key,
+    super.key,
     required this.dateController,
     required this.timeController,
     required this.isLocationFieldActive,
     required this.onDateTap,
     required this.onTimeTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

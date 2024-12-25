@@ -29,14 +29,18 @@ extension EventRevenueExtension on OrganizerBookingService {
   Future<EventDetailModel> getEventSpecificDetails(String eventName) async {
     // Fetch all bookings for this specific event
     final allBookings = await getOrganizerEventBookings().first;
-    final eventBookings = allBookings.where((booking) => booking.eventName == eventName).toList();
+    final eventBookings =
+        allBookings.where((booking) => booking.eventName == eventName).toList();
 
     return EventDetailModel(
       eventName: eventName,
-      totalRevenue: eventBookings.fold(0.0, (sum, booking) => sum + booking.totalPrice),
+      totalRevenue:
+          eventBookings.fold(0.0, (sum, booking) => sum + booking.totalPrice),
       totalBookings: eventBookings.length,
       bookings: eventBookings,
-      eventDate: eventBookings.isNotEmpty ? eventBookings.first.bookingTime : DateTime.now(),
+      eventDate: eventBookings.isNotEmpty
+          ? eventBookings.first.bookingTime
+          : DateTime.now(),
     );
   }
 }
@@ -108,7 +112,8 @@ class EventDetailScreen extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: _buildBookingItem(eventDetails.bookings[index], index),
+                      child: _buildBookingItem(
+                          eventDetails.bookings[index], index),
                     ),
                     childCount: eventDetails.bookings.length,
                   ),
@@ -133,57 +138,53 @@ class EventDetailScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildStatItem('Total Revenue', '\₹${eventDetails.totalRevenue.toStringAsFixed(2)}'),
+          _buildStatItem('Total Revenue',
+              '\₹${eventDetails.totalRevenue.toStringAsFixed(2)}'),
           Container(
             height: 40,
             width: 1,
             color: _primaryColor.withOpacity(0.2),
           ),
-          _buildStatItem('Total Bookings', eventDetails.totalBookings.toString()),
+          _buildStatItem(
+              'Total Bookings', eventDetails.totalBookings.toString()),
         ],
       ),
-    ).animate()
-      .fadeIn(duration: 600.ms)
-      .slide(begin: const Offset(0, 0.1));
+    ).animate().fadeIn(duration: 600.ms).slide(begin: const Offset(0, 0.1));
   }
 
-Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: _backgroundColor.withOpacity(0.5),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Event Insights',
-          style: GoogleFonts.ibmPlexSans(
-            color: _primaryColor,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _backgroundColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Event Insights',
+            style: GoogleFonts.ibmPlexSans(
+              color: _primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        _buildInsightRow(
-          'Avg. Ticket Price', 
-          '\₹${(eventDetails.totalRevenue / eventDetails.totalBookings).toStringAsFixed(2)}'
-        ),
-        _buildInsightRow(
-          'Event Date', 
-          DateFormat('dd MMM yyyy').format(eventDetails.eventDate)
-        ),
-        _buildInsightRow(
-          'Seats Booked', 
-          eventDetails.bookings.fold<int>(0, (sum, booking) => sum + booking.seatsBooked).toString()
-        ),
-      ],
-    ),
-  ).animate()
-    .fadeIn(duration: 600.ms);
-}
+          const SizedBox(height: 12),
+          _buildInsightRow('Avg. Ticket Price',
+              '\₹${(eventDetails.totalRevenue / eventDetails.totalBookings).toStringAsFixed(2)}'),
+          _buildInsightRow('Event Date',
+              DateFormat('dd MMM yyyy').format(eventDetails.eventDate)),
+          _buildInsightRow(
+              'Seats Booked',
+              eventDetails.bookings
+                  .fold<int>(0, (sum, booking) => sum + booking.seatsBooked)
+                  .toString()),
+        ],
+      ),
+    ).animate().fadeIn(duration: 600.ms);
+  }
 
   Widget _buildInsightRow(String label, String value) {
     return Padding(
@@ -213,10 +214,11 @@ Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       title: Text(
-        booking.userName,
+        (booking.userName != null && booking.userName.isNotEmpty)
+            ? booking.userName
+            : 'Unknown User',
         style: GoogleFonts.ibmPlexSans(
-          color: _textColor,
-          fontWeight: FontWeight.w600,
+          color: _textColor.withOpacity(0.7),
         ),
       ),
       subtitle: Text(
@@ -233,18 +235,16 @@ Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
           fontWeight: FontWeight.bold,
         ),
       ),
-    ).animate()
-      .fadeIn(duration: 600.ms)
-      .slide(
-        begin: Offset(index.isEven ? 0.2 : -0.2, 0), 
-        end: Offset.zero,
-      );
+    ).animate().fadeIn(duration: 600.ms).slide(
+          begin: Offset(index.isEven ? 0.2 : -0.2, 0),
+          end: Offset.zero,
+        );
   }
 
   Widget _buildLoadingState() {
     return Center(
-      child:Lottie.asset('asset/animation/Animation - 1731642056954.json',height: 400)
-    );
+        child: Lottie.asset('asset/animation/Animation - 1731642056954.json',
+            height: 400));
   }
 
   Widget _buildNoBookingsState() {
@@ -256,9 +256,7 @@ Widget _buildDetailedInsightsSection(EventDetailModel eventDetails) {
             Icons.event_busy,
             size: 80,
             color: _primaryColor.withOpacity(0.7),
-          ).animate()
-            .scale(duration: 500.ms)
-            .shake(duration: 500.ms),
+          ).animate().scale(duration: 500.ms).shake(duration: 500.ms),
           const SizedBox(height: 16),
           Text(
             'No Bookings for this Event',

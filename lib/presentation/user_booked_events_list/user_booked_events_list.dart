@@ -298,12 +298,15 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      subtitle: Text(
-        booking.userName,
-        style: GoogleFonts.ibmPlexSans(
-          color: _textColor.withOpacity(0.7),
-        ),
-      ),
+   subtitle: Text(
+  (booking.userName != null && booking.userName.isNotEmpty)
+      ? booking.userName
+      : 'Unknown User',
+  style: GoogleFonts.ibmPlexSans(
+    color: _textColor.withOpacity(0.7),
+  ),
+),
+
       trailing: Text(
         '\₹${booking.totalPrice.toStringAsFixed(2)}',
         style: GoogleFonts.ibmPlexSans(

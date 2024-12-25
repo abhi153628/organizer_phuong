@@ -202,7 +202,7 @@ class EventDeleteBottomSheet {
                                                     try {
                                                       await _deletionService
                                                           .handleEventDeletion(
-                                                              eventId, eventName);
+                                                              eventId, );
                                                       await FirebaseEventService()
                                                           .deleteEvent(eventId);
                                                       Navigator.of(context)
@@ -311,7 +311,7 @@ class EventDeleteBottomSheet {
                                                   try {
                                                     await _deletionService
                                                         .handleEventDeletion(
-                                                            eventId, eventName);
+                                                            eventId, );
                                                     await FirebaseEventService()
                                                         .deleteEvent(eventId);
                                                     Navigator.of(context).pop(true);

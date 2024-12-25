@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
@@ -13,8 +11,6 @@ import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_s
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
-import 'package:phuong_for_organizer/presentation/Analytics_page/analytics.screen.dart';
-import 'package:phuong_for_organizer/presentation/Analytics_page/widgets/analytics_items_widget.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_image_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/extra_fields.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
@@ -23,7 +19,7 @@ import 'package:phuong_for_organizer/presentation/event_hosting/widgets/location
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
 import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
-import 'package:phuong_for_organizer/presentation/homepage.dart';
+
 
 class TotalFields extends StatefulWidget {
   final Size size;
