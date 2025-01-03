@@ -124,13 +124,21 @@ class _TotalFieldsState extends State<TotalFields> {
               isLocationFieldActive: _isLocationFieldActive,
             ),
             const SizedBox(height: 28),
-            DateTimeFields(
-              dateController: _dateController,
-              timeController: _timeController,
-              isLocationFieldActive: _isLocationFieldActive,
-              onDateTap: () => _selectDate(context),
-              onTimeTap: () => _selectTime(context),
-            ),
+          DateTimeFields(
+  dateController: _dateController,
+  timeController: _timeController,
+  isLocationFieldActive: _isLocationFieldActive,
+  onDateSelected: (DateTime date) {
+    setState(() {
+      selectedDate = date;
+    });
+  },
+  onTimeSelected: (TimeOfDay time) {
+    setState(() {
+      selectedTime = time;
+    });
+  },
+),
             const SizedBox(height: 28),
             DescriptionField(
               controller: _descriptionController,

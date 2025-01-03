@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:intl/intl.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 
 
@@ -54,21 +55,95 @@ class EventNameField extends StatelessWidget {
   }
 }
 
+
+
 class DateTimeFields extends StatelessWidget {
   final TextEditingController dateController;
   final TextEditingController timeController;
   final bool isLocationFieldActive;
-  final Function() onDateTap;
-  final Function() onTimeTap;
+  final Function(DateTime) onDateSelected;
+  final Function(TimeOfDay) onTimeSelected;
 
   const DateTimeFields({
     super.key,
     required this.dateController,
     required this.timeController,
     required this.isLocationFieldActive,
-    required this.onDateTap,
-    required this.onTimeTap,
+    required this.onDateSelected,
+    required this.onTimeSelected,
   });
+
+  Future<void> _selectDate(BuildContext context) async {
+    if (isLocationFieldActive) return;
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: purple,
+              onPrimary: Colors.white,
+              surface: Colors.black,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: Colors.black,
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.black,
+              headerBackgroundColor: Colors.black,
+              dayBackgroundColor: MaterialStateProperty.all(Colors.black),
+              yearBackgroundColor: MaterialStateProperty.all(Colors.black),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      final formattedDate = DateFormat('dd MMM yyyy').format(picked);
+      dateController.text = formattedDate;
+      onDateSelected(picked);
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    if (isLocationFieldActive) return;
+
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: purple,
+              onPrimary: Colors.white,
+              surface: Colors.black,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: Colors.black,
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: Colors.black,
+              hourMinuteTextColor: Colors.white,
+              dialBackgroundColor: Colors.black,
+              dialHandColor: purple,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      final formattedTime = picked.format(context);
+      timeController.text = formattedTime;
+      onTimeSelected(picked);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,20 +159,24 @@ class DateTimeFields extends StatelessWidget {
                 controller: dateController,
                 enabled: !isLocationFieldActive,
                 readOnly: true,
+                onTap: () => _selectDate(context),
                 decoration: InputDecoration(
                   hintText: "Select Date",
                   hintStyle: TextStyle(
-                      color: isLocationFieldActive
-                          ? Colors.grey.withOpacity(0.5)
-                          : Colors.grey),
+                    color: isLocationFieldActive
+                        ? Colors.grey.withOpacity(0.5)
+                        : Colors.grey,
+                  ),
                   filled: true,
-                  fillColor: grey.withOpacity(isLocationFieldActive ? 0.1 : 0.2),
+                  fillColor: Colors.grey.withOpacity(isLocationFieldActive ? 0.1 : 0.2),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.calendar_today,
-                        color: isLocationFieldActive
-                            ? purple.withOpacity(0.5)
-                            : purple),
-                    onPressed: isLocationFieldActive ? null : onDateTap,
+                    icon: Icon(
+                      Icons.calendar_today,
+                      color: isLocationFieldActive
+                          ? purple.withOpacity(0.5)
+                          : purple,
+                    ),
+                    onPressed: () => _selectDate(context),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -127,20 +206,24 @@ class DateTimeFields extends StatelessWidget {
                 controller: timeController,
                 enabled: !isLocationFieldActive,
                 readOnly: true,
+                onTap: () => _selectTime(context),
                 decoration: InputDecoration(
                   hintText: "Select Time",
                   hintStyle: TextStyle(
-                      color: isLocationFieldActive
-                          ? Colors.grey.withOpacity(0.5)
-                          : Colors.grey),
+                    color: isLocationFieldActive
+                        ? Colors.grey.withOpacity(0.5)
+                        : Colors.grey,
+                  ),
                   filled: true,
-                  fillColor: grey.withOpacity(isLocationFieldActive ? 0.1 : 0.2),
+                  fillColor: Colors.grey.withOpacity(isLocationFieldActive ? 0.1 : 0.2),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.access_time,
-                        color: isLocationFieldActive
-                            ? purple.withOpacity(0.5)
-                            : purple),
-                    onPressed: isLocationFieldActive ? null : onTimeTap,
+                    icon: Icon(
+                      Icons.access_time,
+                      color: isLocationFieldActive
+                          ? purple.withOpacity(0.5)
+                          : purple,
+                    ),
+                    onPressed: () => _selectTime(context),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -162,9 +245,7 @@ class DateTimeFields extends StatelessWidget {
       ],
     );
   }
-}
-
-class DescriptionField extends StatelessWidget {
+}class DescriptionField extends StatelessWidget {
   final TextEditingController controller;
   final bool isLocationFieldActive;
 

@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthServices {
   final _auth = FirebaseAuth.instance;
+ 
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
    Future<User?> signInWithEmailAndPassword({
     required String email,
@@ -35,30 +37,7 @@ class FirebaseAuthServices {
     }
   }
 
-  Future<void> signOut() async {
-    try {
-      await _auth.signOut();
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    }
-  }
-
-  Future<UserCredential?> loginWithGoogle() async {
-    try {
-      final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return null;
-
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-      
-      return await _auth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    }
-  }
+ 
 
   String _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
@@ -84,8 +63,15 @@ class FirebaseAuthServices {
         return e.message ?? 'An error occurred during authentication.';
     }
   }
-    //!email verfication
-  Future<void>sendPasswordResetLink(String email)async{
+ Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+         _googleSignIn.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
+   Future<void>sendPasswordResetLink(String email)async{
     try {
       await _auth.sendPasswordResetEmail(email: email);
       
@@ -94,4 +80,26 @@ class FirebaseAuthServices {
       
     }
   }
+     Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null;
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = 
+          await _auth.signInWithCredential(credential);
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw 'An error occurred during Google sign in';
+    }
+  }
+
+ 
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
 import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
-import 'package:phuong_for_organizer/presentation/loginpage/forgot_password.dart';
+import 'package:phuong_for_organizer/presentation/auth_section/forgot_password.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/profile_screen.dart';
 
 class Helo extends StatefulWidget {
@@ -221,7 +220,7 @@ Future<void> _handleLogin() async {
             Container(
               color: Colors.black54,
               child:  Center(
-                child:   Lottie.asset('asset/animation/Animation - 1731642056954.json'),
+                child:   CircularProgressIndicator(),
               ),
             )
         ],
@@ -281,8 +280,8 @@ Future<void> _handleLogin() async {
               text: 'Sign In',
               onPressed: _handleLogin,
             ),
-            SizedBox(height: spacing * 0.85),
-            _buildGoogleSignInButton(),
+          
+          
             const SizedBox(height: 1),
             TextButton(
               onPressed: () {
@@ -370,7 +369,7 @@ Future<void> _handleLogin() async {
               onPressed: _handleSignup,
             ),
             SizedBox(height: spacing * 0.5),
-            _buildGoogleSignInButton(),
+           
             const Spacer(),
             _buildToggleButton(),
           ],
@@ -379,30 +378,7 @@ Future<void> _handleLogin() async {
     );
   }
 
-  Widget _buildGoogleSignInButton() {
-    return OutlinedButton.icon(
-      onPressed: _handleGoogleSignIn,
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 62),
-        side: BorderSide(color: purple),
-        backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      icon: Image.asset(
-        'asset/welcomepage_asset/pngwing.com.png',
-        height: 24,
-      ),
-      label: const Text(
-        'Continue with Google',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
+ 
 
   Widget _buildToggleButton() {
     return Row(
@@ -724,7 +700,7 @@ class LoadingOverlay extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Lottie.asset('asset/animation/Animation - 1731642056954.json'),
+                CircularProgressIndicator(),
                   if (loadingText != null) ...[
                     const SizedBox(height: 16),
                     Text(

@@ -7,8 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
-import 'package:phuong_for_organizer/presentation/homepage.dart';
-import 'package:phuong_for_organizer/presentation/loginpage/forgot_password.dart';
+
 import 'package:phuong_for_organizer/presentation/profile_page/widgets/selecting_type_profile.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_bloc.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_event.dart';

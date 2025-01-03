@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
-import 'package:phuong_for_organizer/presentation/loginpage/login_screen.dart';
-import 'package:phuong_for_organizer/presentation/signup_page/auth_screen.dart';
-import 'package:phuong_for_organizer/presentation/signup_page/signup_screen.dart';
+
+import 'package:phuong_for_organizer/presentation/auth_section/auth_screen.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
    ForgotPasswordScreen({Key? key}) : super(key: key);

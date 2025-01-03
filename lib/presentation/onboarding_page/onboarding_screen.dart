@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
-import 'package:phuong_for_organizer/presentation/homepage.dart';
+
 import 'package:phuong_for_organizer/presentation/onboarding_page/widgets/onboarding_widget.dart';
-import 'package:phuong_for_organizer/presentation/signup_page/auth_screen.dart';
-import 'package:phuong_for_organizer/presentation/signup_page/signup_screen.dart';
+import 'package:phuong_for_organizer/presentation/auth_section/auth_screen.dart';
+
 
 
 class OnboardingScreen extends StatefulWidget {
