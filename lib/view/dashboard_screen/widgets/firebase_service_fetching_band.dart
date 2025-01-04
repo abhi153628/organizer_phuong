@@ -6,13 +6,12 @@ import 'package:testing/view/dashboard_screen/widgets/band_card_widget.dart';
 import 'package:testing/view/dashboard_screen/widgets/stats_card.dart';
 
 class FireBaseFetchingBand extends StatefulWidget {
-  const FireBaseFetchingBand({Key? key}) : super(key: key);
+  const FireBaseFetchingBand({super.key});
 
-  @override
-  _FireBaseFetchingBandState createState() => _FireBaseFetchingBandState();
+  @override    FireBaseFetchingBandState createState() => FireBaseFetchingBandState();
 }
 
-class _FireBaseFetchingBandState extends State<FireBaseFetchingBand> {
+class FireBaseFetchingBandState extends State<FireBaseFetchingBand> {
   List<Map<String, dynamic>> pendingBands = [];
   bool isLoading = true;
   int totalBands = 0;
