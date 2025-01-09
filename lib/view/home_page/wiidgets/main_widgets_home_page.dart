@@ -1,6 +1,8 @@
+// ignore_for_file: deprecated_member_use, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:testing/modal/transition_modal.dart';
+import 'package:testing/utils/transition_modal.dart';
 import 'package:testing/res/colors.dart';
 import 'package:testing/view/about_us/about_us_page.dart';
 import 'package:testing/view/dashboard_screen/dash_board.dart';
@@ -17,11 +19,11 @@ class HomePageWidgets {
       child: Container(
         width: 1100,
         height: 1100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color(0xFF153949),
-              const Color(0xFF0F232E),
+              Color(0xFF153949),
+              Color(0xFF0F232E),
               black,
               black,
             ],
@@ -70,7 +72,7 @@ class HomePageWidgets {
               child: Container(
                 width: 350,
                 height: 550,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: black,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(300),
@@ -110,7 +112,7 @@ class HomePageWidgets {
               child: Container(
                 width: 300,
                 height: 280,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: black,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(500),
@@ -153,7 +155,7 @@ class HomePageWidgets {
                   Transform.rotate(
                     angle: 2.5,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 420, right: 1),
+                      padding: const EdgeInsets.only(bottom: 420, right: 1),
                       child: Icon(
                         Icons.arrow_back_outlined,
                         size: 60,
@@ -164,7 +166,7 @@ class HomePageWidgets {
                 // Conditionally display the welcome text based on screen width
                 if (screenWidth >
                     800) // Display only on screens wider than 600 pixels
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 200, top: 370),
                     child: Text(
                       'WELCOME TO OUR CREATOR SIDE,\nWITH A SINGLE CLICK, YOU APPROVE OR REJECT BANDS,\nENSURING ONLY AUTHENTIC TALENT HITS THE STAGE',
@@ -237,7 +239,7 @@ class HomePageWidgets {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Pending Approvals: 5',
                     style: TextStyle(color: white, fontSize: 18),
                   ),
@@ -282,7 +284,7 @@ class HomePageWidgets {
                     onPressed: () {
                       Navigator.of(context).push(
                         GentlePageTransition(
-                            page: const PhuongAdminDashboard()),
+                            page:  PhuongAdminDashboard()),
                       );
                     },
                   ),
@@ -292,7 +294,7 @@ class HomePageWidgets {
                     text: 'APPROVE REQUEST',
                     onPressed: () {
                       Navigator.of(context).push(
-                        GentlePageTransition(page: ApproveFromHomePage()),
+                        GentlePageTransition(page: const ApproveFromHomePage()),
                       );
                     },
                   ),
@@ -339,7 +341,7 @@ class HomePageWidgets {
                               Navigator.pop(context); // Close dialog
                               Navigator.of(context).push(
                                 GentlePageTransition(
-                                  page: const PhuongAdminDashboard(),
+                                  page:  PhuongAdminDashboard(),
                                 ),
                               );
                             },
@@ -352,7 +354,7 @@ class HomePageWidgets {
                               Navigator.pop(context); // Close dialog
                               Navigator.of(context).push(
                                 GentlePageTransition(
-                                  page: ApproveFromHomePage(),
+                                  page: const ApproveFromHomePage(),
                                 ),
                               );
                             },

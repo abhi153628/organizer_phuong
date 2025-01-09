@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, use_super_parameters
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +10,7 @@ class ApproveFromHomePage extends StatefulWidget {
   const ApproveFromHomePage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ApproveFromHomePageState createState() => _ApproveFromHomePageState();
 }
 
@@ -59,7 +62,7 @@ class _ApproveFromHomePageState extends State<ApproveFromHomePage> {
       setState(() {
         acceptedBands = querySnapshot.docs
             .map((doc) => {
-                  ...doc.data() as Map<String, dynamic>,
+                  ...doc.data(),
                   'organizerId': doc.id,
                 })
             .toList();
@@ -148,6 +151,7 @@ class _ApproveFromHomePageState extends State<ApproveFromHomePage> {
                     const Color(0xFF1A1A1A),
                     Color.lerp(
                       const Color(0xFF1A1A1A),
+                    
                       const Color(0xFFFF5E1D).withOpacity(0.15),
                       _scrollProgress.clamp(0.0, 1.0),
                     )!,

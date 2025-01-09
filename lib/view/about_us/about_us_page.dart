@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class AboutUsPage extends StatelessWidget {
@@ -39,7 +41,8 @@ class AboutUsPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color:     Color.fromARGB(255, 0, 0, 0).withOpacity(0.6),
+                        
+                          color:     const Color.fromARGB(255, 0, 0, 0).withOpacity(0.6),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),

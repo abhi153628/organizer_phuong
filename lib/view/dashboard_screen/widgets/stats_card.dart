@@ -7,11 +7,11 @@ class StatCards extends StatelessWidget {
   final int rejectedEvents;
 
   const StatCards({
-    Key? key,
+    super.key,
     required this.totalBands,
     required this.pendingApprovals,
     required this.rejectedEvents,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +56,7 @@ class StatCards extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),

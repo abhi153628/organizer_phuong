@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,7 +39,7 @@ class CustomAlertDialog extends StatelessWidget {
         Container(
           height: 500,
           width: 600,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 100,
             bottom: 16,
             left: 16,
@@ -47,9 +49,9 @@ class CustomAlertDialog extends StatelessWidget {
             color: const Color.fromARGB(255, 0, 0, 0),
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(17),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: const Color.fromARGB(66, 255, 255, 255),
+                color: Color.fromARGB(66, 255, 255, 255),
                 blurRadius: 20.0,
                 offset: Offset(0.0, 10.0),
               ),
@@ -58,7 +60,7 @@ class CustomAlertDialog extends StatelessWidget {
           child: Column(
             // mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               //!title
@@ -67,26 +69,26 @@ class CustomAlertDialog extends StatelessWidget {
                       fontSize: 24.0,
                       fontWeight: FontWeight.w700,
                       color: Colors.white)),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               //!subtitle
               Text(
                 subtitle,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 17.0,
-                    color: const Color.fromARGB(255, 194, 191, 191),
+                    color: Color.fromARGB(255, 194, 191, 191),
                     fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               Row(
                 //!buttons
 
                 children: <Widget>[
-                  Spacer(),
+                  const Spacer(),
                   SizedBox(
                     width: 250,
                     height: 60,
@@ -105,7 +107,7 @@ class CustomAlertDialog extends StatelessWidget {
                               color: Colors.black)),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   SizedBox(
                     width: 250,
                     height: 60,
@@ -126,18 +128,18 @@ class CustomAlertDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
             ],
           ),
         ),
-        Positioned(
+        const Positioned(
           top: 40,
           left: 16,
           right: 16,
           child: CircleAvatar(
-            backgroundColor: const Color(0xFFFF5E1D),
+            backgroundColor: Color(0xFFFF5E1D),
             radius: 50,
             child: Icon(
               Icons.assistant_photo,
@@ -178,7 +180,7 @@ void showCustomDialog(BuildContext context) {
         ),
       );
     },
-    transitionDuration: Duration(milliseconds: 200),
+    transitionDuration: const Duration(milliseconds: 200),
     barrierDismissible: true,
     barrierLabel: '',
     pageBuilder: (context, animation1, animation2) {

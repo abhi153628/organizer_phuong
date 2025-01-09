@@ -1,6 +1,8 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
+
 //! ANIMATED GRADIENT TEXT
 class AnimatedGradientText extends StatefulWidget {
   final String text;
@@ -13,6 +15,7 @@ class AnimatedGradientText extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AnimatedGradientTextState createState() => _AnimatedGradientTextState();
 }
 

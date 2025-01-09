@@ -1,12 +1,17 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:testing/view/dashboard_screen/widgets/dashboard_content.dart';
 import 'package:testing/view/dashboard_screen/widgets/sidebar.dart';
+import 'package:testing/view_modal/controllers/dashboard_controller.dart';
 
 
 class ScalableWrapper extends StatelessWidget {
   final Widget child;
   final double designWidth;
 
+ 
   const ScalableWrapper({
     Key? key,
     required this.child,
@@ -34,57 +39,34 @@ class ScalableWrapper extends StatelessWidget {
   }
 }
 
-class PhuongAdminDashboard extends StatefulWidget {
-  const PhuongAdminDashboard({Key? key}) : super(key: key);
 
-  @override
-  _PhuongAdminDashboardState createState() => _PhuongAdminDashboardState();
-}
 
-class _PhuongAdminDashboardState extends State<PhuongAdminDashboard> {
-  int _selectedIndex = 0;
-  List<Map<String, dynamic>> acceptedBands = [];
-  List<Map<String, dynamic>> rejectedBands = [];
-  int totalBands = 0;
-  int pendingApprovals = 0;
+class PhuongAdminDashboard extends StatelessWidget {
+  PhuongAdminDashboard({Key? key}) : super(key: key);
 
-  void updateSelectedIndex(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 5) {
-      _handleLogout();
-    }
-  }
-
-  void _handleLogout() {
-    //todo logout
-    print('Logout pressed');
-  }
+  final DashboardController controller = Get.put(DashboardController());
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-
     Widget dashboardContent = Row(
       children: [
-      
-          AdminSidebar(
-            selectedIndex: _selectedIndex,
-            onIndexChanged: updateSelectedIndex,
-          ),
+        Obx(() => AdminSidebar(
+              selectedIndex: controller.selectedIndex,
+              onIndexChanged: controller.updateSelectedIndex,
+            )),
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(screenWidth > 500 ? 32.0 : 16.0),
-              child: DashboardContent(
-                selectedIndex: _selectedIndex,
-                totalBands: totalBands,
-                pendingApprovals: pendingApprovals,
-                rejectedBands: rejectedBands.length,
-                rejectedEvents: rejectedBands.length,
-              ),
+              child: Obx(() => DashboardContent(
+                    selectedIndex: controller.selectedIndex,
+                    totalBands: controller.totalBands,
+                    pendingApprovals: controller.pendingApprovals,
+                    rejectedBands: controller.rejectedBands.length,
+                    rejectedEvents: controller.rejectedBands.length,
+                  )),
             ),
           ),
         ),
@@ -93,9 +75,8 @@ class _PhuongAdminDashboardState extends State<PhuongAdminDashboard> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
-  
       body: ScalableWrapper(
-        designWidth: 1, 
+        designWidth: 1,
         child: dashboardContent,
       ),
     );

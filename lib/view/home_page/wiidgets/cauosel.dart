@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 //! CAROUSEL USED IN THE HOMEPAGE
 class AnimatedEventCarousel extends StatefulWidget {
-  const AnimatedEventCarousel({Key? key}) : super(key: key);
+  const AnimatedEventCarousel({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

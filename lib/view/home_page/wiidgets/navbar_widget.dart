@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:testing/modal/transition_modal.dart';
+import 'package:testing/utils/transition_modal.dart';
 import 'package:testing/res/colors.dart';
 import 'package:testing/view/about_us/about_us_page.dart';
 import 'package:testing/view/dashboard_screen/dash_board.dart';
@@ -29,7 +29,7 @@ class HomePageWidgets {
                     text: 'ADMIN DASHBOARD',
                     onPressed: () {
                       Navigator.of(context).push(
-                        GentlePageTransition(page: const PhuongAdminDashboard()),
+                        GentlePageTransition(page:  PhuongAdminDashboard()),
                       );
                     },
                   ),
@@ -39,7 +39,7 @@ class HomePageWidgets {
                     text: 'APPROVE REQUEST',
                     onPressed: () {
                       Navigator.of(context).push(
-                        GentlePageTransition(page: ApproveFromHomePage()),
+                        GentlePageTransition(page: const ApproveFromHomePage()),
                       );
                     },
                   ),
@@ -86,7 +86,7 @@ class HomePageWidgets {
                               Navigator.pop(context); // Close dialog
                               Navigator.of(context).push(
                                 GentlePageTransition(
-                                  page: const PhuongAdminDashboard(),
+                                  page:  PhuongAdminDashboard(),
                                 ),
                               );
                             },
@@ -99,7 +99,7 @@ class HomePageWidgets {
                               Navigator.pop(context); // Close dialog
                               Navigator.of(context).push(
                                 GentlePageTransition(
-                                  page: ApproveFromHomePage(),
+                                  page: const ApproveFromHomePage(),
                                 ),
                               );
                             },
@@ -146,13 +146,15 @@ class HomePageWidgets {
     required void Function()? onPressed,
   }) {
     return MouseRegion(
+      // ignore: avoid_print
       onEnter: (event) => print('Hovering $text'),
+      // ignore: avoid_print
       onExit: (event) => print('Stopped hovering $text'),
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.hovered)) {
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
               return orange;
             }
             return white;
@@ -180,10 +182,10 @@ class HomePageWidgets {
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          padding: MaterialStateProperty.all(
+          padding: WidgetStateProperty.all(
             const EdgeInsets.symmetric(vertical: 16.0),
           ),
-          foregroundColor: MaterialStateProperty.all(white),
+          foregroundColor: WidgetStateProperty.all(white),
         ),
         child: Text(
           text,

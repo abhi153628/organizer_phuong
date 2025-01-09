@@ -1,4 +1,6 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: unused_local_variable
+
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,12 +14,12 @@ class BandCard extends StatefulWidget {
   final bool showRejectButton;
 
   const BandCard({
-    Key? key,
+    super.key,
     required this.bandData,
     required this.onStatusUpdate,
     this.showAcceptButton = true,
     this.showRejectButton = true,
-  }) : super(key: key);
+  });
 
   @override
   State<BandCard> createState() => _BandCardState();
@@ -29,7 +31,6 @@ class _BandCardState extends State<BandCard> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     
     // Enhanced responsive breakpoints
     final isSmallScreen = screenWidth < 600;
@@ -98,7 +99,7 @@ class _BandCardState extends State<BandCard> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        SizedBox(height: 3),
+        const SizedBox(height: 3),
         Row(
           children: [
             const Icon(Icons.music_note, color: Color(0xFFFF5E1D)),
@@ -115,7 +116,7 @@ class _BandCardState extends State<BandCard> {
             ),
           ],
         ),
-        SizedBox(height: 3),
+        const SizedBox(height: 3),
         _buildActionButtons(
           context, 
           buttonHeight: isSmallScreen ?  30: (isMediumScreen ? 40 : 50),
@@ -140,6 +141,7 @@ class _BandCardState extends State<BandCard> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
+                  // ignore: deprecated_member_use
                   backgroundColor: const Color(0xFFFF5E1D).withOpacity(0.8),
                 ),
                 onPressed: () => _showConfirmationDialog(
@@ -243,7 +245,7 @@ Widget _buildBandImage(String? imageUrl) {
   return CachedNetworkImage(
     imageUrl: imageUrl,
     fit: BoxFit.cover,
-    placeholder: (context, url) => Center(
+    placeholder: (context, url) => const Center(
       child: SizedBox(
         height: 100,
         width: 100,

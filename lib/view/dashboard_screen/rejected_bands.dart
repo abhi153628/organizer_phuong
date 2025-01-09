@@ -5,9 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:testing/view/dashboard_screen/widgets/band_card_widget.dart';
 
 class RejectedBandsPage extends StatefulWidget {
-  const RejectedBandsPage({Key? key}) : super(key: key);
+  const RejectedBandsPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _RejectedBandsPageState createState() => _RejectedBandsPageState();
 }
 
@@ -34,6 +35,7 @@ class _RejectedBandsPageState extends State<RejectedBandsPage> {
       setState(() {
         rejectedBands = querySnapshot.docs
             .map((doc) => {
+                  // ignore: unnecessary_cast
                   ...doc.data() as Map<String, dynamic>,
                   'organizerId': doc.id,
                 })
@@ -41,7 +43,7 @@ class _RejectedBandsPageState extends State<RejectedBandsPage> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error fetching rejected bands: $e');
+  
       setState(() {
         isLoading = false;
       });
@@ -60,6 +62,7 @@ class _RejectedBandsPageState extends State<RejectedBandsPage> {
 
       _fetchRejectedBands();
     } catch (e) {
+      // ignore: avoid_print
       print('Error updating band status: $e');
     }
   }

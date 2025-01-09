@@ -1,8 +1,10 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
-import 'package:testing/view/home_page/homepage.dart';
+
 
 class RejectedEvents extends StatelessWidget {
-  const RejectedEvents({Key? key}) : super(key: key);
+  const RejectedEvents({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class RejectedEvents extends StatelessWidget {
               children: [
                 _buildHeader(),
               
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 // _buildPendingRequests(),
                 listTile(context),
                  listTile(context),
@@ -33,8 +35,8 @@ class RejectedEvents extends StatelessWidget {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -62,8 +64,8 @@ class RejectedEvents extends StatelessWidget {
 
 
   Widget _buildTab(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Text('Pending Aprovals'));
        
   }
@@ -79,18 +81,18 @@ class RejectedEvents extends StatelessWidget {
           onTap: () {
             // Action on tap
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('List Tile Tapped!')),
+              const SnackBar(content: Text('List Tile Tapped!')),
             );
           },
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [Colors.deepPurple, Colors.purpleAccent],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 8,
@@ -101,7 +103,7 @@ class RejectedEvents extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: ListTile(
-                contentPadding: EdgeInsets.all(16),
+                contentPadding: const EdgeInsets.all(16),
                 leading: Hero(
                   tag: 'imageHero',
                   child: ClipRRect(
@@ -114,7 +116,7 @@ class RejectedEvents extends StatelessWidget {
                     ),
                   ),
                 ),
-                title: Text(
+                title: const Text(
                   'IMAGINE DRAGONS',
                   style: TextStyle(
                     color: Colors.white,
@@ -122,8 +124,8 @@ class RejectedEvents extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                subtitle: const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     'California, Bermuda',
                     style: TextStyle(
@@ -132,7 +134,7 @@ class RejectedEvents extends StatelessWidget {
                     ),
                   ),
                 ),
-                trailing: Icon(
+                trailing: const Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.white70,
                 ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:testing/view/dashboard_screen/accepted_screen.dart';
-import 'package:testing/view/dashboard_screen/dash_board.dart';
+
 import 'package:testing/view/dashboard_screen/rejected_bands.dart';
 import 'package:testing/view/dashboard_screen/widgets/welcoming_widget.dart';
 import 'package:testing/view/dashboard_screen/widgets/firebase_service_fetching_band.dart';
-import 'package:testing/view/dashboard_screen/widgets/stats_card.dart';
+
 //! SIDE BAR FUNCTIONS ON PRESSED
 class DashboardContent extends StatelessWidget {
   final int selectedIndex;
@@ -14,25 +14,25 @@ class DashboardContent extends StatelessWidget {
   final int rejectedBands;
 
   const DashboardContent({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.totalBands,
     required this.pendingApprovals,
     required this.rejectedBands, required int rejectedEvents,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     switch (selectedIndex) {
       case 0:
-        return Column(
+        return const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const DashboardHeader(),
-            const SizedBox(height: 40),
+            DashboardHeader(),
+            SizedBox(height: 40),
           
           
-            const FireBaseFetchingBand(),
+            FireBaseFetchingBand(),
           ],
         );
       case 1:
@@ -47,25 +47,22 @@ class DashboardContent extends StatelessWidget {
   }
 
   Widget _buildApprovedContent() {
-    return AcceptedBandsPage();
+    return const AcceptedBandsPage();
   }
 
   Widget _buildRejectedContent() {
-    return RejectedBandsPage();
+    return const RejectedBandsPage();
   }
 
-  Widget _buildPendingContent() {
-    return PhuongAdminDashboard();
-  }
 
   Widget _buildDashboardContent() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DashboardHeader(),
-        const SizedBox(height: 40),
+        DashboardHeader(),
+        SizedBox(height: 40),
        
-        const FireBaseFetchingBand(),
+        FireBaseFetchingBand(),
       ],
     );
   }

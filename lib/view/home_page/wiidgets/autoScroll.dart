@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:testing/res/image_string.dart';
 //! HORIZONTALY SCROLLING IMAGES
@@ -6,10 +7,10 @@ class ImmersiveScrollingImages extends StatefulWidget {
   final int direction;
 
   const ImmersiveScrollingImages({
-    Key? key,
+    super.key,
     required this.startingIndex,
     required this.direction,
-  }) : super(key: key);
+  });
 
   @override
   State<ImmersiveScrollingImages> createState() => _ImmersiveScrollingImagesState();
@@ -63,8 +64,9 @@ class _ImmersiveScrollingImagesState extends State<ImmersiveScrollingImages> {
         height: 1000,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
+          // ignore: prefer_const_literals_to_create_immutables
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
             
               blurRadius: 10,
               spreadRadius: 4,

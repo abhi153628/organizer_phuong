@@ -1,13 +1,15 @@
-import 'dart:developer';
+
+
+// ignore_for_file: avoid_print, deprecated_member_use
 
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:testing/modal/firebase_service.dart';
+import 'package:testing/services/organizer_profile.dart';
 import 'package:testing/utils/cstm_alertbox.dart';
 
 // Import the Firebase service
@@ -18,13 +20,13 @@ class ProfilePage extends StatefulWidget {
   final Function(String, String)? onStatusUpdate;
 
   const ProfilePage(
-      {Key? key,
+      {super.key,
       this.width = double.infinity,
       required this.organizerId,
-      this.onStatusUpdate})
-      : super(key: key);
+      this.onStatusUpdate});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfilePageState createState() => _ProfilePageState();
 }
 
@@ -33,8 +35,6 @@ class _ProfilePageState extends State<ProfilePage>
   late AnimationController _mainController;
   late AnimationController _backgroundController;
   late Animation<double> _scaleAnimation;
-  late Animation<double> _rotateAnimation;
-  late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
   final FirebaseProfileService _profileService = FirebaseProfileService();
@@ -42,7 +42,9 @@ class _ProfilePageState extends State<ProfilePage>
   bool _isLoading = true;
 
   final List<Color> _backgroundGradient = [
+ 
     Colors.orange.withOpacity(0.5),
+ 
     const Color(0xFFFF5E1D).withOpacity(0.3),
     Colors.transparent,
     Colors.transparent
@@ -88,19 +90,7 @@ class _ProfilePageState extends State<ProfilePage>
       parent: _mainController,
       curve: const Interval(0.0, 0.5, curve: Curves.elasticOut),
     );
-    _rotateAnimation = Tween<double>(begin: 0, end: 2 * math.pi).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.5, 1.0, curve: Curves.easeInOut),
-      ),
-    );
 
-    _slideAnimation = Tween<double>(begin: -100, end: 0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.2, 0.6, curve: Curves.easeOutCubic),
-      ),
-    );
 
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
@@ -140,6 +130,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    // ignore: sized_box_for_whitespace
     return Container(
       width: 800,
       height: 800,
@@ -168,7 +159,6 @@ class _ProfilePageState extends State<ProfilePage>
                       double maxWidth = constraints.maxWidth;
                       double avatarSize =
                           maxWidth < 600 ? maxWidth * 0.25 : 150;
-                      double fontSize = maxWidth < 600 ? 20 : 28;
 
                       return SingleChildScrollView(
                         child: Padding(
@@ -204,92 +194,91 @@ class _ProfilePageState extends State<ProfilePage>
                                               _isLiked = !_isLiked;
                                             });
                                           },
-                                          child: Container(
-                                            child: Column(
-                                              children: [
-                                                CircleAvatar(
-                                                  radius: avatarSize / 1,
-                                                  backgroundImage: const AssetImage(
-                                                      'asset/back-view-crowd-fans-watching-live-concert-performance-6.jpg'),
-                                                  child: _profileData[
-                                                                  'imageUrl'] !=
-                                                              null ||
-                                                          _profileData[
-                                                                  'imageUrl'] !=
-                                                              ''
-                                                      ? ClipOval(
-                                                          child:
-                                                              CachedNetworkImage(
-                                                          imageUrl: _profileData[
-                                                                  'imageUrl'] ??
-                                                              '',
-                                                          fit: BoxFit.cover,
-                                                          width: avatarSize * 2,
-                                                          height:
-                                                              avatarSize * 2,
-                                                          placeholder:
-                                                              (context, url) =>
-                                                                  SizedBox(
-                                                            width: 300,
-                                                            height: 300,
-                                                            // child: Lottie.asset(
-                                                            //   'asset/Animation - 1729398055158.json',
-                                                            //   fit: BoxFit
-                                                            //       .contain,
-                                                            // ),
-                                                          ),
-                                                          errorWidget: (context,
-                                                              url, error) {
-                                                            print(
-                                                                'Error loading image: $error');
-                                                            print(
-                                                                'Error details: ${error.toString()}');
-                                                            return const Icon(
-                                                                Icons.error);
-                                                          },
-                                                        ))
-                                                      : null,
+                                          child: Column(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: avatarSize / 1,
+                                                backgroundImage: const AssetImage(
+                                                    'asset/back-view-crowd-fans-watching-live-concert-performance-6.jpg'),
+                                                child: _profileData[
+                                                                'imageUrl'] !=
+                                                            null ||
+                                                        _profileData[
+                                                                'imageUrl'] !=
+                                                            ''
+                                                    ? ClipOval(
+                                                        child:
+                                                            CachedNetworkImage(
+                                                        imageUrl: _profileData[
+                                                                'imageUrl'] ??
+                                                            '',
+                                                        fit: BoxFit.cover,
+                                                        width: avatarSize * 2,
+                                                        height:
+                                                            avatarSize * 2,
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                // ignore: prefer_const_constructors
+                                                                SizedBox(
+                                                          width: 300,
+                                                          height: 300,
+                                                          // child: Lottie.asset(
+                                                          //   'asset/Animation - 1729398055158.json',
+                                                          //   fit: BoxFit
+                                                          //       .contain,
+                                                          // ),
+                                                        ),
+                                                        errorWidget: (context,
+                                                            url, error) {
+                                                          print(
+                                                              'Error loading image: $error');
+                                                          print(
+                                                              'Error details: ${error.toString()}');
+                                                          return const Icon(
+                                                              Icons.error);
+                                                        },
+                                                      ))
+                                                    : null,
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                          70, 16, 13, 13)
+                                                      .withOpacity(0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10),
                                                 ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                            70, 16, 13, 13)
-                                                        .withOpacity(0.9),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: FittedBox(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: FadeTransition(
-                                                        opacity: _fadeAnimation,
-                                                        child: Text(
-                                                           ( _profileData[
-                                                                    'name'] ??
-                                                                'Name Not Available').toString().toUpperCase(),
-                                                            style: GoogleFonts.ibmPlexSansArabic(
-                                                                color: const Color
-                                                                    .fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    255),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 28)),
-                                                      ),
+                                                child: FittedBox(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: FadeTransition(
+                                                      opacity: _fadeAnimation,
+                                                      child: Text(
+                                                         ( _profileData[
+                                                                  'name'] ??
+                                                              'Name Not Available').toString().toUpperCase(),
+                                                          style: GoogleFonts.ibmPlexSansArabic(
+                                                              color: const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  255,
+                                                                  255),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 28)),
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),

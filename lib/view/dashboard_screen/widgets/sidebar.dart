@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +14,7 @@ class AdminSidebar extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AdminSidebarState createState() => _AdminSidebarState();
 }
 
@@ -151,6 +154,7 @@ class _AdminSidebarState extends State<AdminSidebar> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: isActive
+            // ignore: deprecated_member_use
             ? const Color(0xFFFF5E1D).withOpacity(0.1)
             : Colors.transparent,
       ),

@@ -35,7 +35,7 @@ class FireBaseFetchingBandState extends State<FireBaseFetchingBand> {
 
       List<Map<String, dynamic>> allBands = querySnapshot.docs
           .map((doc) => {
-                ...doc.data() as Map<String, dynamic>,
+                ...doc.data(),
                 'organizerId': doc.id,
               })
           .toList();
@@ -59,6 +59,7 @@ class FireBaseFetchingBandState extends State<FireBaseFetchingBand> {
         isLoading = false;
       });
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching bands: $e');
       setState(() {
         isLoading = false;
@@ -168,6 +169,7 @@ class FireBaseFetchingBandState extends State<FireBaseFetchingBand> {
 
       _fetchBands();
     } catch (e) {
+      // ignore: avoid_print
       print('Error updating band status: $e');
     }
   }

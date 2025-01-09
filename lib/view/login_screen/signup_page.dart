@@ -15,17 +15,6 @@ class LoginPage extends StatelessWidget {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-// ?_________________________________________________________________________________________________________________
 //! MEDIAQUERY
 
 class ResponsiveSignUpLayout extends StatelessWidget {

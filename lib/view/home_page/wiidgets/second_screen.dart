@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 const Color orange = Color(0xFFFF5E1D);
 
 class SecondScreen extends StatelessWidget {
+  // ignore: use_super_parameters
   const SecondScreen({Key? key}) : super(key: key);
 
   @override
@@ -88,6 +89,7 @@ class SecondScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ignore: prefer_const_constructors
                             Icon(
                               Icons.arrow_forward,
                               size: 40,

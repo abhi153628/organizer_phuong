@@ -1,13 +1,16 @@
 // lib/screens/admin/dashboard/accepted_bands_page.dart
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:testing/view/dashboard_screen/widgets/band_card_widget.dart';
 
 class AcceptedBandsPage extends StatefulWidget {
-  const AcceptedBandsPage({Key? key}) : super(key: key);
+  const AcceptedBandsPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AcceptedBandsPageState createState() => _AcceptedBandsPageState();
 }
 
@@ -34,7 +37,7 @@ class _AcceptedBandsPageState extends State<AcceptedBandsPage> {
       setState(() {
         acceptedBands = querySnapshot.docs
             .map((doc) => {
-                  ...doc.data() as Map<String, dynamic>,
+                  ...doc.data(),
                   'organizerId': doc.id,
                 })
             .toList();

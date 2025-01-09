@@ -1,5 +1,7 @@
+ // ignore_for_file: prefer_const_constructors
+
  import 'package:flutter/material.dart';
 
 final Color orange =Color(0xFFFF5E1D);
-final Color black =Colors.black;
-final Color white= Colors.white;
+const Color black =Colors.black;
+const Color white= Colors.white;
