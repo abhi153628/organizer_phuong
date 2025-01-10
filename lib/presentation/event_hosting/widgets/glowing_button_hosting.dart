@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -54,8 +56,6 @@ class _GlowingButtonState extends State<GlowingButton>
     double adjustedValue = animationValue * speedFactor;
     
     // Calculate shadow positions with adjusted speed
-    double x = radius * math.cos(adjustedValue);
-    double y = radius * math.sin(adjustedValue);
     
     // Create trailing effect with adjusted speed
     // Increased number of shadows for smoother gradient

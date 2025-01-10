@@ -64,6 +64,7 @@ Future<double> getOrganizerTotalRevenue() async {
         print('Error processing booking: $e');
         return total;
       }
+      
     });
   } catch (e) {
     print('Error calculating total revenue: $e');

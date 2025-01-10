@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
@@ -157,8 +160,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.white),
+          ?  Center(
+              child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
             )
           : CustomScrollView(
               slivers: [

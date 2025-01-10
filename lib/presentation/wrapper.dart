@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
-import 'package:phuong_for_organizer/presentation/profile_sucess_page/profile_sucess_screen.dart';
+import 'package:phuong_for_organizer/presentation/status_page/status_screen/status_screen.dart';
 import 'package:phuong_for_organizer/presentation/welcome_page/welcome_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +13,7 @@ class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);
 
   // Fetch organizer profile status
+  // ignore: unused_element
   Future<String?> _getOrganizerStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final status = prefs.getString('profileStatus');
@@ -68,7 +69,7 @@ class Wrapper extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: Lottie.asset('asset/animation/Animation - 1731642056954.json'),
+              child: Lottie.asset('asset/animation/Loading_animation.json',height: 150, width: 150),
             );
           }
 
@@ -111,11 +112,7 @@ class Wrapper extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Center(
-                        child: SizedBox(
-                          height: 300,
-                          width: 400,
-                          child: Lottie.asset('asset/animation/Animation - 1731642056954.json'),
-                        ),
+                        child: Lottie.asset('asset/animation/Loading_animation.json',height: 150, width: 150),
                       ),
                     ],
                   );

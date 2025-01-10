@@ -63,14 +63,34 @@ class FirebaseAuthServices {
         return e.message ?? 'An error occurred during authentication.';
     }
   }
- Future<void> signOut() async {
+  Future<void> signOut() async {
     try {
+      // First check if user signed in with Google
+      final googleUser = await _googleSignIn.signInSilently();
+      
+      // Sign out from Google if the user was signed in with Google
+      if (googleUser != null) {
+        await _googleSignIn.signOut();
+      }
+
+      // Sign out from Firebase
       await _auth.signOut();
-         _googleSignIn.signOut();
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
-    }
+    } 
   }
+
+
+
+
+
+
+
+
+
+
+
+
    Future<void>sendPasswordResetLink(String email)async{
     try {
       await _auth.sendPasswordResetEmail(email: email);

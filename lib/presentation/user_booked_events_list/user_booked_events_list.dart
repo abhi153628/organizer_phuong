@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,14 +10,14 @@ import 'package:phuong_for_organizer/data/dataresources/booked_event_services.da
 import 'package:phuong_for_organizer/data/models/booked_events_modal.dart';
 import 'package:phuong_for_organizer/presentation/user_booked_events_list/revenue_detailed_page.dart';
 
-class EventRevenuePage extends StatefulWidget {
-  const EventRevenuePage({Key? key}) : super(key: key);
+class Bookings extends StatefulWidget {
+  const Bookings({Key? key}) : super(key: key);
 
   @override
-  _EventRevenuePageState createState() => _EventRevenuePageState();
+  _BookingsState createState() => _BookingsState();
 }
 
-class _EventRevenuePageState extends State<EventRevenuePage> {
+class _BookingsState extends State<Bookings> {
   final OrganizerBookingService _bookingService = OrganizerBookingService();
 
   // Minimalist color palette
@@ -121,6 +123,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
+         
           color: _backgroundColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -165,6 +168,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
   }
 
   // Modified Bookings List to use filtered bookings
+  // ignore: unused_element
   Widget _buildMinimalistBookingsList() {
     // If search is active and no results found
     if (_isSearching && _filteredBookings.isEmpty) {
@@ -299,6 +303,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
         ),
       ),
    subtitle: Text(
+  // ignore: unnecessary_null_comparison
   (booking.userName != null && booking.userName.isNotEmpty)
       ? booking.userName
       : 'Unknown User',
@@ -332,6 +337,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
   );
 }
 
+  // ignore: unused_element
   void _showBookingDetails(BookingModel booking) {
     showModalBottomSheet(
       context: context,
@@ -405,6 +411,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildBookingsPlaceholder() {
     return ListView.builder(
       shrinkWrap: true,
@@ -420,6 +427,7 @@ class _EventRevenuePageState extends State<EventRevenuePage> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildEmptyState() {
     return Center(
       child: Column(

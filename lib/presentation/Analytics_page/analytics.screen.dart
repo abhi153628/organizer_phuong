@@ -1,10 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_drawer.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
@@ -25,7 +25,7 @@ class AnalyticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     String? organizerId;
+    String? organizerId;
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
@@ -38,7 +38,8 @@ class AnalyticsPage extends StatelessWidget {
             return Scaffold(
               backgroundColor: black,
               body: Center(
-                child: CircularProgressIndicator(color: purple),
+                child: Lottie.asset('asset/animation/Loading_animation.json',
+                    height: 170, width: 170),
               ),
             );
           }
@@ -90,12 +91,11 @@ class AnalyticsPage extends StatelessWidget {
                             color: Colors.grey[800],
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                              strokeWidth: 2,
-                            ),
+                          child: Center(
+                            child: Lottie.asset(
+                                'asset/animation/Loading_animation.json',
+                                height: 170,
+                                width: 170),
                           ),
                         );
                       } else if (state is AnalyticsImageFetchError) {
@@ -149,16 +149,14 @@ class AnalyticsPage extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       placeholder: (context, url) => Container(
                                         color: Colors.grey[800],
-                                        child: const Center(
+                                        child: Center(
                                           child: SizedBox(
                                             width: 20,
                                             height: 20,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Colors.black),
-                                            ),
+                                            child: Lottie.asset(
+                                                'asset/animation/Loading_animation.json',
+                                                height: 170,
+                                                width: 170),
                                           ),
                                         ),
                                       ),
@@ -214,51 +212,61 @@ class AnalyticsPage extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.04),
                       Center(
-                        child: Text(
-                          'Know and grow your audience',
-                          style: GoogleFonts.ibmPlexSansArabic(
-                            fontSize: screenWidth * 0.05,
-                            fontWeight: FontWeight.bold,
-                            color: white,
+                        child: FadeIn(
+                          child: Text(
+                            'Know and grow your audience',
+                            style: GoogleFonts.ibmPlexSansArabic(
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.bold,
+                              color: white,
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.013),
                       Center(
-                        child: Text(
-                          'Get detailed insights about your audience.Publish an \n           episode and your analytics will show here',
-                          style: GoogleFonts.rubik(
-                            fontSize: screenWidth * 0.032,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w400,
+                        child: FadeIn(
+                          child: Text(
+                            'Get detailed insights about your audience.Publish an \n           episode and your analytics will show here',
+                            style: GoogleFonts.rubik(
+                              fontSize: screenWidth * 0.032,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.06),
-                      AnalyticsItem(
-                        icon: Icons.favorite,
-                        title: 'Follower Growth',
-                        description:
-                            'See your follower growth over time and track engagement.',
-                        onTap: () {},
+                      FadeIn(
+                        child: AnalyticsItem(
+                          icon: Icons.monetization_on,
+                          title: 'Revenue Analytics',
+                          description:
+                              'Gain insights into your earnings with detailed revenue analysis and growth metrics.',
+                          onTap: () {},
+                        ),
                       ),
                       SizedBox(height: screenHeight * 0.04),
-                      AnalyticsItem(
-                        icon: Icons.location_on,
-                        title: 'Audience Location',
-                        description:
-                            'Find out where your fans are located to plan events.',
-                        onTap: () {},
+                      FadeIn(
+                        child: AnalyticsItem(
+                          icon: Icons.person_add_alt_1,
+                          title: 'Booked Users',
+                          description:
+                              'Access comprehensive data on users who have confirmed bookings for your services.',
+                          onTap: () {},
+                        ),
                       ),
                       SizedBox(height: screenHeight * 0.04),
-                      AnalyticsItem(
-                        icon: Icons.bar_chart,
-                        title: 'Event Performance',
-                        description:
-                            'View metrics on attendance, sales, and fan interaction.',
-                        onTap: () {},
+                      FadeIn(
+                        child: AnalyticsItem(
+                          icon: Icons.chat_bubble_outline,
+                          title: 'Direct Chat Users',
+                          description:
+                              'Seamlessly connect and communicate with users through direct messaging.',
+                          onTap: () {},
+                        ),
                       ),
-                      SizedBox(height: screenHeight * 0.038),
+                      SizedBox(height: screenHeight * 0.020),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
@@ -272,12 +280,14 @@ class AnalyticsPage extends StatelessWidget {
                               vertical: screenHeight * 0.02,
                             ),
                           ),
-                          child: Text(
-                            'Publish an Event',
-                            style: GoogleFonts.ibmPlexSansArabic(
-                              color: black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.04,
+                          child: FadeIn(
+                            child: Text(
+                              'Publish an Event',
+                              style: GoogleFonts.ibmPlexSansArabic(
+                                color: black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 0.04,
+                              ),
                             ),
                           ),
                         ),

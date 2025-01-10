@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,14 +9,13 @@ import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
 import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_service.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
-import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
+
 import 'package:phuong_for_organizer/presentation/edit_page_event_hosting/event_type_selection_edit.dart';
 import 'package:phuong_for_organizer/presentation/edit_page_event_hosting/genre_selection_widget.dart';
 import 'package:phuong_for_organizer/presentation/edit_page_event_hosting/image_edit_page.dart';
-import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_image_hosting.dart';
-import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
+
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
-import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
+
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
 
 class EditEventPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class EditEventPage extends StatefulWidget {
 
 class _EditEventPageState extends State<EditEventPage> {
   final FirebaseEventService _eventService = FirebaseEventService();
+  // ignore: unused_field
   final OrganizerProfileAddingFirebaseService _firebaseService = OrganizerProfileAddingFirebaseService();
   int? _selectedEventTypeIndex;
 
@@ -222,6 +224,7 @@ class _EditEventPageState extends State<EditEventPage> {
             hintText: "Event Name",
             hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
+            
             fillColor: grey.withOpacity(0.2),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -260,6 +263,7 @@ class _EditEventPageState extends State<EditEventPage> {
                   hintText: "Select Date",
                   hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
+                  
                   fillColor: grey.withOpacity(0.2),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.calendar_today, color: purple),
@@ -296,6 +300,7 @@ class _EditEventPageState extends State<EditEventPage> {
                   hintText: "Select Time",
                   hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
+               
                   fillColor: grey.withOpacity(0.2),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.access_time, color: purple),
@@ -336,6 +341,7 @@ class _EditEventPageState extends State<EditEventPage> {
             hintText: "Tell what your show is about",
             hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
+            
             fillColor: grey.withOpacity(0.2),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -377,6 +383,7 @@ class _EditEventPageState extends State<EditEventPage> {
               fontWeight: FontWeight.w300,
             ),
             filled: true,
+          
             fillColor: grey.withOpacity(0.1),
             prefixIcon: Icon(
               Icons.location_on,
@@ -860,28 +867,6 @@ Widget _buildPerformanceType(dynamic size) {
     );
   }
 
-  void _clearForm() {
-    _eventNameController.clear();
-
-    _descriptionController.clear();
-    _ticketPriceController.clear();
-    _instagramLinkController.clear();
-    _facebookLinkController.clear();
-    _emailController.clear();
-    _seatAvailabilityCountController.clear();
-    _eventDurationTimeController.clear();
-    _specialInstructionController.clear();
-    _locationController.clear();
-    _dateController.clear();
-    _timeController.clear();
-    setState(() {
-      selectedDate = null;
-      selectedTime = null;
-      selectedGenre = null;
-      _selectedEventTypeIndex = null;
-      _selectedImage = null;
-    });
-  }
 
   // Add these functions in your _EditEventPageState class:
   Future<void> _selectDate(BuildContext context) async {

@@ -1,12 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/core/widgets/transition.dart';
+import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
-import 'package:phuong_for_organizer/data/models/user_profile_modal.dart';
 import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
 import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/org_prof_view_screen.dart';
-import 'package:phuong_for_organizer/presentation/user_booked_events_list/user_booked_events_list.dart';
+import 'package:phuong_for_organizer/presentation/wrapper.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -17,7 +19,9 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer>
     with SingleTickerProviderStateMixin {
-  final OrganizerProfileAddingFirebaseService _organizerService = OrganizerProfileAddingFirebaseService();
+  final OrganizerProfileAddingFirebaseService _organizerService =
+      OrganizerProfileAddingFirebaseService();
+  FirebaseAuthServices _authServices = FirebaseAuthServices();
   String? _organizerId;
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -44,6 +48,145 @@ class _CustomDrawerState extends State<CustomDrawer>
     super.dispose();
   }
 
+  Future<void> _handleLogout(BuildContext context) async {
+  try {
+    // Show confirmation dialog first
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: const Color(0xFF1A1A1A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: purple, width: 1),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.logout_rounded,
+                  size: 48,
+                  color: purple,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Confirm Logout',
+                  style: GoogleFonts.ibmPlexSansArabic(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: white,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Are you sure you want to logout?',
+                  style: TextStyle(
+                    color: Colors.grey[300],
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.grey[300],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // Show loading dialog
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: Lottie.asset(
+                                'asset/animation/Loading_animation.json',
+                                height: 150,
+                                width: 150,
+                              ),
+                            );
+                          },
+                        );
+
+                        // Perform logout
+                        _authServices.signOut().then((_) {
+                          // Pop loading dialog
+                          Navigator.of(context).pop();
+
+                          // Navigate to wrapper
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => const Wrapper(),
+                            ),
+                            (route) => false,
+                          );
+                        }).catchError((e) {
+                          // Pop loading dialog if still showing
+                          Navigator.of(context).pop();
+                          
+                          // Show error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Logout failed: ${e.toString()}'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: purple,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  } catch (e) {
+    print('Error in logout: $e');
+  }
+}
   Future<void> _loadOrganizerId() async {
     try {
       final profile = await _organizerService.getCurrentUserProfile();
@@ -89,6 +232,9 @@ class _CustomDrawerState extends State<CustomDrawer>
             ),
           );
         }
+        break;
+      case 5:
+        _handleLogout(context);
         break;
     }
   }
@@ -153,8 +299,8 @@ class _CustomDrawerState extends State<CustomDrawer>
               ),
               const Divider(color: Color(0xFF2C2C2C)),
               _buildMenuItem(
-                icon: Icons.settings_rounded,
-                title: 'Settings',
+                icon: Icons.logout_outlined,
+                title: 'LogOut',
                 index: 5,
                 onTap: () => _handleNavigation(context, 5),
               ),

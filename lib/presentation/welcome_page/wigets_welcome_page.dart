@@ -86,10 +86,11 @@ class GetStartedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-           Navigator.of(context)
-              .push(GentlePageTransition(page: Helo()));
-      },
+ onPressed: () {
+  Navigator.of(context)
+      .pushReplacement(GentlePageTransition(page: Helo()));
+},
+
       child: Text(
         'Get started',
         style: TextStyle(

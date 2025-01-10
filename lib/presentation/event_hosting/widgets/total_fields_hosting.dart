@@ -1,8 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_snackbar.dart';
 import 'package:phuong_for_organizer/core/widgets/cstm_text.dart';
@@ -15,7 +18,6 @@ import 'package:phuong_for_organizer/presentation/event_hosting/widgets/adding_i
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/extra_fields.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/genre_type_selecting_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/glowing_button_hosting.dart';
-import 'package:phuong_for_organizer/presentation/event_hosting/widgets/location_search_field.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/select_event_type_hosting.dart';
 import 'package:phuong_for_organizer/presentation/event_hosting/widgets/terms_and_condition_widget.dart';
 import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_page.dart';
@@ -38,9 +40,6 @@ class _TotalFieldsState extends State<TotalFields> {
 
   // check if any checkbox is selected
   int? _selectedEventTypeIndex;
-  bool _isAnyCheckboxSelected() {
-    return _selectedEventTypeIndex != null;
-  }
 
   List<String> _eventRules = [];
   //!image
@@ -69,7 +68,6 @@ class _TotalFieldsState extends State<TotalFields> {
   TimeOfDay? selectedTime;
   String? selectedGenre;
   final TextEditingController _locationController = TextEditingController();
-  LocationModel? _selectedLocation;
 
   bool _isLocationFieldActive = false;
 
@@ -280,6 +278,7 @@ class _TotalFieldsState extends State<TotalFields> {
           try {
             OrganizerProfileAddingModal? currentUserProfile =
                 await _firebaseService.getCurrentUserProfile();
+            // ignore: unnecessary_null_comparison
             if (currentUserProfile == null || currentUserProfile.name == null) {
               // ignore: use_build_context_synchronously
               CustomSnackBar.show(
@@ -301,8 +300,8 @@ class _TotalFieldsState extends State<TotalFields> {
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return  Center(
+                  child:Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
                 );
               },
             );
@@ -412,6 +411,7 @@ class _TotalFieldsState extends State<TotalFields> {
   }
 
   // Add these functions in your _TotalFieldsState class:
+  // ignore: unused_element
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -442,6 +442,7 @@ class _TotalFieldsState extends State<TotalFields> {
     }
   }
 
+  // ignore: unused_element
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,

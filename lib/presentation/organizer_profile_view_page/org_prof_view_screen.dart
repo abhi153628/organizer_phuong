@@ -1,11 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
-
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
 import 'package:phuong_for_organizer/presentation/Edit_org_profile_screen/edit_org_prof_adding_screen.dart';
@@ -24,13 +24,13 @@ class OrganizerProfileViewScreen extends StatelessWidget {
     return DefaultTabController(
       length: 1,
       child: Scaffold(
-        backgroundColor: black, // Darker background for better contrast
+        backgroundColor: black, //
         body: FutureBuilder<OrganizerProfileAddingModal?>(
           future: _firebaseService.getCurrentUserProfile(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(color: purple,)
+                child:Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
               );
             }
 
@@ -89,7 +89,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
       background: Stack(
         fit: StackFit.expand,
         children: [
-          // Background Image or Gradient
+        
           if (profile.imageUrl != null)
             // Cached Background Image with Fade Effect
             Stack(
@@ -150,7 +150,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
               ],
             )
           else
-            // Fallback Gradient
+       
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -191,10 +191,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
                           imageUrl: profile.imageUrl!,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(
-                              color: purple,
-                              strokeWidth: 2,
-                            ),
+                            child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
                           ),
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey[850],
@@ -234,7 +231,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
             const SizedBox(height: 20),
             // Name
             Text(
-              profile.name ?? 'Loading...',
+              profile.name,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 28,
@@ -325,7 +322,7 @@ class OrganizerProfileViewScreen extends StatelessWidget {
             GentlePageTransition(
               page: EditOrganizerProfileScreen(
                 organizerId: profile.id ?? '',
-                currentName: profile.name ?? '',
+                currentName: profile.name,
                 currentBio: profile.bio ?? '',
                 currentImageUrl: profile.imageUrl ?? '',
                 currentLinks: profile.links ?? [],

@@ -1,13 +1,13 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
-
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
-import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
 import 'package:phuong_for_organizer/presentation/org_profile_add_screen/widgets/add_link_wid.dart';
-
 
 class FieldsOrgProfileWidget extends StatefulWidget {
   final Size size;
@@ -67,6 +67,7 @@ class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
   try {
     _uploadedImageUrl = await _firebaseService.uploadImage(_selectedImage!);
 
+    // ignore: unused_local_variable
     final profile = OrganizerProfileAddingModal(
       name: _nameController.text,
       bio: _bioController.text,
@@ -74,7 +75,6 @@ class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
       links: _links,
     );
 
-   final profileId= await _firebaseService.saveProfile(profile);
 
     setState(() => _isLoading = false);
 
@@ -234,7 +234,7 @@ class _FieldsOrgProfileWidgetState extends State<FieldsOrgProfileWidget> {
       ),
       onPressed: _isLoading ? null : _submitForm,
       child: _isLoading
-          ? const CircularProgressIndicator(color: Colors.white)
+          ? Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
           : const Text(
               'Submit',
               style: TextStyle(

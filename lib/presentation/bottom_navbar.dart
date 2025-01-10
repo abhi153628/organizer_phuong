@@ -1,7 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:phuong_for_organizer/presentation/Analytics_page/analytics.screen.dart';
-import 'package:phuong_for_organizer/presentation/chat_section.dart/chat_list_page.dart';
-import 'package:phuong_for_organizer/presentation/organizer_profile_view_page/org_prof_view_screen.dart';
+import 'package:phuong_for_organizer/presentation/chat_section.dart/chat_listing_page/chat_list_page.dart';
+
 import 'package:phuong_for_organizer/presentation/user_booked_events_list/user_booked_events_list.dart';
 
 class MainScreen extends StatefulWidget {
@@ -50,7 +52,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           scaffoldBackgroundColor: Colors.black,
           canvasColor: Colors.black,
         ),
-        child: EventRevenuePage(),
+        child: Bookings(),
       ),
     ];
 

@@ -1,11 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/data/dataresources/chat_services.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/chat_message_modal.dart';
-import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
+
 
 class OrganizerChatScreen extends StatefulWidget {
   final String userId;
@@ -57,6 +60,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
     try {
       final chatRoomId = await _chatService.findChatRoomWithUser(widget.userId);
 
+      // ignore: unnecessary_null_comparison
       if (chatRoomId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No existing chat room found')),
@@ -289,12 +293,13 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
                     : CrossAxisAlignment.start,
                 children: [
                   // Sender Name (for non-current user)
+                  // ignore: unnecessary_null_comparison
                   if (!isCurrentUser && message.senderName != null)
                     Padding(
                       padding:
                           const EdgeInsets.only(bottom: 4, left: 8, right: 8),
                       child: Text(
-                        message.senderName ?? '',
+                        message.senderName,
                         style: TextStyle(
                           fontFamily: 'Rubik',
                           color: Colors.white54,
@@ -462,10 +467,8 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
 
   Widget _buildChatContent() {
     if (_chatRoomId == null || _currentUserId == null) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFF9791FF),
-        ),
+      return  Center(
+        child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
       );
     }
 
@@ -473,10 +476,8 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
       stream: _chatService.getMessages(_chatRoomId!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Color(0xFF9791FF),
-            ),
+          return  Center(
+            child:Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
           );
         }
 

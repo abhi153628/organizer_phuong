@@ -1,0 +1,19 @@
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "asset/icon/phoung violet 2-01.png"
+  adaptive_icon_background: "#9791FF"  # Updated to purple
+  adaptive_icon_foreground: "asset/icon/phoung violet 2-01.png"
+  web:
+    generate: true
+    image_path: "asset/icon/phoung violet 2-01.png"
+    background_color: "#9791FF"  # Updated to purple
+    theme_color: "#9791FF"  # Updated to purple
+  windows:
+    generate: true
+    image_path: "asset/icon/phoung violet 2-01.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "asset/icon/phoung violet 2-01.png"
+  remove_alpha_ios: true

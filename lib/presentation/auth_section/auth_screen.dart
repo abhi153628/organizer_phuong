@@ -1,5 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/data/dataresources/firebase_auth_services.dart';
@@ -124,34 +127,31 @@ Future<void> _handleLogin() async {
   }
 }
 
-  Future<void> _handleSignup() async {
-    if (_signupFormKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      try {
-        await _auth.createUserEmailAndPassword(
-            _signupEmailController.text, _signupPasswordController.text);
-        await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-        // ignore: use_build_context_synchronously
-        Navigator.of(context)
-            .push(GentlePageTransition(page:  ProfileScreen(organizerEmail: _signupEmailController.text,)));
-        _signupEmailController.text = '';
-        _signupPasswordController.text = '';
-        _signupConfirmPasswordController.text = '';
-      } finally {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
-  Future<void> _handleGoogleSignIn() async {
+Future<void> _handleSignup() async {
+  if (_signupFormKey.currentState!.validate()) {
     setState(() => _isLoading = true);
     try {
-      // TODO: Implement Google Sign-in
+      await _auth.createUserEmailAndPassword(
+          _signupEmailController.text, _signupPasswordController.text);
       await Future.delayed(const Duration(seconds: 1)); // Simulate API call
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushReplacement(
+        GentlePageTransition(
+          page: ProfileScreen(
+            organizerEmail: _signupEmailController.text,
+          ),
+        ),
+      );
+      _signupEmailController.text = '';
+      _signupPasswordController.text = '';
+      _signupConfirmPasswordController.text = '';
     } finally {
       setState(() => _isLoading = false);
     }
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +220,7 @@ Future<void> _handleLogin() async {
             Container(
               color: Colors.black54,
               child:  Center(
-                child:   CircularProgressIndicator(),
+                child:   Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
               ),
             )
         ],
@@ -700,7 +700,7 @@ class LoadingOverlay extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                CircularProgressIndicator(),
+                Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
                   if (loadingText != null) ...[
                     const SizedBox(height: 16),
                     Text(

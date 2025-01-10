@@ -1,7 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/data/dataresources/organizer_profile_adding_firebase_service.dart';
 import 'package:phuong_for_organizer/data/models/organizer_profile_adding_modal.dart';
@@ -124,6 +127,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: black,
@@ -164,6 +168,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
         width: 120,
         height: 120,
         decoration: BoxDecoration(
+         
           color: Colors.grey.withOpacity(0.2),
           borderRadius: BorderRadius.circular(60),
         ),
@@ -177,7 +182,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
                 child: CachedNetworkImage(
                   imageUrl: widget.currentImageUrl,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => CircularProgressIndicator(color: purple),
+                  placeholder: (context, url) => Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
                   errorWidget: (context, url, error) =>
                       // ignore: prefer_const_constructors
                       Icon(Icons.add_a_photo, color: Colors.white, size: 40),
@@ -199,6 +204,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
             hintText: "Your Name",
             hintStyle: const TextStyle(color: Colors.grey),
             filled: true,
+            
             fillColor: Colors.grey.withOpacity(0.2),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -274,7 +280,7 @@ class _EditOrganizerProfileScreenState extends State<EditOrganizerProfileScreen>
       ),
       onPressed: _isLoading ? null : _updateProfile,
       child: _isLoading
-          ? const CircularProgressIndicator(color: Colors.white)
+          ? Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
           : const Text(
               'Update Profile',
               style: TextStyle(

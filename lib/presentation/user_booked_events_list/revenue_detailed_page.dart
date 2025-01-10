@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -214,6 +216,7 @@ class EventDetailScreen extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       title: Text(
+        // ignore: unnecessary_null_comparison
         (booking.userName != null && booking.userName.isNotEmpty)
             ? booking.userName
             : 'Unknown User',

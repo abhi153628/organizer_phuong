@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,6 +60,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
+    // ignore: unused_local_variable
     final isLargeScreen = screenWidth > 600;
 
     return Scaffold(
@@ -414,6 +417,6 @@ Widget _buildImageError() {
   }
 
   void _launchURL(String url) async {
-    // TODO: Implement URL launching using url_launcher package
+   
   }
 }

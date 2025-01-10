@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+// ignore: must_be_immutable
 class EditSelectedEventType extends StatefulWidget {
   final Function(int?) onSelectionChanged;
 int ? initialSelectedIndex;

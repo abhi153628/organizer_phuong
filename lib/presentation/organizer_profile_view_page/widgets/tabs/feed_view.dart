@@ -1,10 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phuong_for_organizer/core/constants/color.dart';
 import 'package:phuong_for_organizer/data/dataresources/post_feed_firebase_service_class.dart';
-
-
 
 class FeedView extends StatelessWidget {
   final PostFeedFirebaseService _firebaseService = PostFeedFirebaseService();
@@ -95,7 +96,7 @@ class FeedView extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(color: purple),
+            child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
           );
         }
         
@@ -176,9 +177,7 @@ class FeedView extends StatelessWidget {
                                 child: Container(
                                   color: Colors.grey[850],
                                   child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: purple,
-                                    ),
+                                    child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170)
                                   ),
                                 ),
                               ),
@@ -255,9 +254,7 @@ class ImageViewerPage extends StatelessWidget {
                     placeholder: (context, url) => Container(
                       color: Colors.transparent,
                       child: Center(
-                        child: CircularProgressIndicator(
-                          color: purple,
-                        ),
+                        child: Lottie.asset('asset/animation/Loading_animation.json',height: 170, width: 170),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(

@@ -1,36 +1,49 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phuong_for_organizer/core/widgets/transition.dart';
 import 'package:phuong_for_organizer/presentation/bottom_navbar.dart';
+import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_bloc/bloc/event_listing_bloc.dart';
+import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_bloc/bloc/event_listing_event.dart';
+import 'package:phuong_for_organizer/presentation/event_listing_page/event_listing_bloc/bloc/event_listing_state.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:phuong_for_organizer/core/constants/color.dart';
-import 'package:phuong_for_organizer/data/dataresources/event_hosting_firebase_service.dart';
+
 import 'package:phuong_for_organizer/data/models/event_hosting_modal.dart';
 import 'package:phuong_for_organizer/presentation/event_detailed_page/event_detailed_page.dart';
 
 
 
-class EventListPage extends StatelessWidget {
-  final FirebaseEventService _eventService = FirebaseEventService();
 
-  EventListPage({super.key});
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+
+class EventListPage extends StatelessWidget {
+  const EventListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // No need to create a new BlocProvider here since it's provided at app level
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).push(GentlePageTransition(page: MainScreen(organizerId: '')));
-        }, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              GentlePageTransition(page: MainScreen(organizerId: '')),
+            );
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Events ',
+          'Events',
           style: GoogleFonts.ibmPlexSansArabic(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -38,27 +51,40 @@ class EventListPage extends StatelessWidget {
           ),
         ),
       ),
-      body:// Replace only the Scaffold's body part in your existing code
-StreamBuilder<QuerySnapshot>(
-  stream: _eventService.getOrganizerEvents(),
-  builder: (context, snapshot) {
-    if (snapshot.hasError) {
-      return _buildErrorState();
-    }
-
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return _buildLoadingState();
-    }
-
-    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return _buildEmptyState();
-    }
-
-    // Return the event list when data is available
-    return _buildEventList(context, snapshot.data!.docs);
-  },
-),
-);
+      body: BlocConsumer<EventListBloc, EventListState>(
+        listener: (context, state) {
+          if (state is EventListError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is EventListInitial) {
+            // Trigger load events when in initial state
+            context.read<EventListBloc>().add(LoadEvents());
+            return _buildLoadingState();
+          }
+          
+          if (state is EventListLoading) {
+            return _buildLoadingState();
+          }
+          
+          if (state is EventListError) {
+            return _buildErrorState();
+          }
+          
+          if (state is EventListLoaded) {
+            if (state.events.isEmpty) {
+              return _buildEmptyState();
+            }
+            return _buildEventList(context, state.events);
+          }
+          
+          return const SizedBox.shrink();
+        },
+      ),
+    );
   }
 
   Widget _buildErrorState() {
@@ -132,26 +158,42 @@ StreamBuilder<QuerySnapshot>(
     );
   }
 
-  Widget _buildEventList(BuildContext context, List<QueryDocumentSnapshot> docs) {
+  Widget _buildEventList(BuildContext context, List<EventHostingModal> events) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: docs.length,
+      itemCount: events.length,
       itemBuilder: (context, index) {
-        final eventData = docs[index].data() as Map<String, dynamic>;
-        final event = EventHostingModal.fromMap(eventData);
-
+        final event = events[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventDetailPage(event: event),
-                ),
-              );
+          child: Dismissible(
+            key: Key(event.eventId ?? ''),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            onDismissed: (direction) {
+              if (event.eventId != null) {
+                context.read<EventListBloc>().add(DeleteEvent(event.eventId!));
+              }
             },
-            child: _EventCard(event: event),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailPage(event: event),
+                  ),
+                );
+              },
+              child: _EventCard(event: event),
+            ),
           ),
         );
       },
@@ -299,8 +341,15 @@ class _EventCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.grey[900],
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: purple.withOpacity(0.5),
-                            ),boxShadow:[BoxShadow(color: purple.withOpacity(0.2),spreadRadius: 1)]
+                            border: Border.all(
+                              color: purple.withOpacity(0.5),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: purple.withOpacity(0.2),
+                                spreadRadius: 1,
+                              ),
+                            ],
                           ),
                           child: Text(
                             '${event.seatAvailabilityCount!.toInt()} seats',

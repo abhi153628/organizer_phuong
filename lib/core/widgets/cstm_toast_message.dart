@@ -28,7 +28,7 @@ class CustomToast {
       ),
     );
 
-    overlay?.insert(overlayEntry);
+    overlay.insert(overlayEntry);
 
     // Remove the toast after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {

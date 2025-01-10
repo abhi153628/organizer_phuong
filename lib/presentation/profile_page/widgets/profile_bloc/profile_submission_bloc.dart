@@ -1,9 +1,8 @@
 // lib/blocs/profile/profile_bloc.dart
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
+
 import 'package:phuong_for_organizer/data/dataresources/profile_screen_firebase.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_event.dart';
 import 'package:phuong_for_organizer/presentation/profile_page/widgets/profile_bloc/profile_submission_state.dart';
@@ -23,6 +22,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       _currentImageUrl=event.image.path;
+      // ignore: unused_local_variable
       final organizerId = 'org_${DateTime.now().millisecondsSinceEpoch}';
 
     } catch (e) {
